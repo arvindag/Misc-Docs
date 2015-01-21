@@ -1,0 +1,22 @@
+First file with some commands 
+
+Install VirtualBox
+
+Start a New VM, 32 GB VDI, 1024 RAM, Dynamic Allocation using the amd64.iso file
+
+Then on the VM, "Devices" -> "Insert Guest Additions CD" to  install the guest additions for Ubuntu
+
+# Install Emacs
+sudo apt-get install emacs
+
+Copy ~/.emacs file from another email
+
+vi ~/.bashrc and add
+
+alias lt='ls -altr'
+alias c=clear
+alias h=history
+
+
+Then do the git installation as explained in another email
+
