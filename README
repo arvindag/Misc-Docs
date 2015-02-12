@@ -9,6 +9,14 @@ Then on the VM, "Devices" -> "Insert Guest Additions CD" to  install the guest a
 # Install Emacs
 sudo apt-get install emacs
 
+sudo apt-get install apt-file
+apt-file update
+
+sudo apt-get install libtiff4-dev
+sudo apt-get install libssl-dev
+sudo apt-get install openssl
+sudo apt-get install gnome-system-tools
+
 Copy ~/.emacs file from another email
 
 vi ~/.bashrc and add
@@ -18,5 +26,38 @@ alias c=clear
 alias h=history
 
 
-Then do the git installation as explained in another email
+sudo apt-get install git
+git config --global user.name "Arvind Agrawal"
+git config --global user.email "arvindag@gmail.com"
 
+vi ~/.gitconfig # to see the git config entries
+
+# ssh key generation
+cd ~
+mkdir .ssh
+cd .ssh/
+ssh-keygen -t dsa -C "arvindag@gmail.com"
+mv id_dsa id_dsa.personalpn
+mv id_dsa.pub id_dsa.personalpn.pub
+
+Upload the dsa.personalpn.pub on the github.com "Settings" and "ssh keys" section
+
+vi config
+Add "
+Host githib.com
+    HostName github.com
+    Port 22
+    IdentityFile ~/.ssh/id_dsa.personalpn
+"
+
+ssh -T git@github.com
+
+# Clone github files to local area
+cd ~
+mkdir PeerNova
+cd PeerNova/
+git clone git@github.com:peernova/Peer-Audit.git
+git clone git@github.com:peernova/Eldorado.git
+
+cd ~/personal
+git clone git@github.com:arvindag/Misc-Docs.git
