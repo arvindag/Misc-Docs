@@ -64,3 +64,9 @@ git clone git@github.com:peernova/Eldorado.git
 
 cd ~/personal
 git clone git@github.com:arvindag/Misc-Docs.git
+
+To get a particular branch:
+mkdir <newdir>
+cd <newdir>
+git clone -b <branchname> git@github.com:peernova/Peer-Audit.git
+
