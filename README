@@ -16,6 +16,18 @@ sudo apt-get install libtiff4-dev
 sudo apt-get install libssl-dev
 sudo apt-get install openssl
 sudo apt-get install gnome-system-tools
+sudo apt-get install tree
+sudo apt-get install vim
+
+Install Gimp:
+sudo add-apt-repository ppa:otto-kesselgulasch/gimp
+sudo apt-get update
+sudo apt-get install gimp
+
+Gimp PlugIn registry:
+sudo add-apt-repository ppa:otto-kesselgulasch/gimp
+sudo apt-get update
+sudo apt-get install gimp-plugin-registry
 
 Copy ~/.emacs file from another email
 
