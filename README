@@ -18,6 +18,7 @@ sudo apt-get install openssl
 sudo apt-get install gnome-system-tools
 sudo apt-get install tree
 sudo apt-get install vim
+sudo apt-get install gnone-session-fallback
 
 Install Gimp:
 sudo add-apt-repository ppa:otto-kesselgulasch/gimp
