@@ -2,7 +2,7 @@ First file with some commands
 
 Install VirtualBox
 
-Start a New VM, 32 GB VDI, 1024 RAM, Dynamic Allocation using the amd64.iso file
+Start a New VM, 64 GB VDI, 4096 MB RAM, Dynamic Allocation using the amd64.iso file
 
 Then on the VM, "Devices" -> "Insert Guest Additions CD" to  install the guest additions for Ubuntu
 
@@ -12,6 +12,8 @@ sudo apt-get install emacs
 sudo apt-get install apt-file
 apt-file update
 
+sudo apt-get update
+
 sudo apt-get install libtiff4-dev
 sudo apt-get install libssl-dev
 sudo apt-get install openssl
@@ -19,6 +21,7 @@ sudo apt-get install gnome-system-tools
 sudo apt-get install gnone-session-fallback
 sudo apt-get install tree
 sudo apt-get install vim
+sudo apt-get install build-essentials
 
 Install Gimp:
 sudo add-apt-repository ppa:otto-kesselgulasch/gimp
@@ -44,7 +47,7 @@ alias rm='rm -i'
 alias clt='clear; ls -alt'
 
 
-sudo apt-get install git
+sudo apt-get install git gitk git-gui
 git config --global user.name "Arvind Agrawal"
 git config --global user.email "arvindag@gmail.com"
 
