@@ -136,3 +136,7 @@ sudo apt-get install libpcre3 libpcre3-dev
 (global-set-key   "\C-z"   'bury-buffer)                 ; C-z
 (global-set-key   "\C-x\C-b" 'buffer-menu-other-window)  ; C-x C-b
 
+
+sudo apt-get install pypy
+sudo apt-get install -y python-pip python-virtualenv
+sudo apt-get install idle
