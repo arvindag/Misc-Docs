@@ -151,8 +151,10 @@ sudo apt-get install nodejs
 sudo apt-get install npm
 sudo ln -s /usr/bin/nodejs /usr/sbin/node
 npm install ws
+npm install twit
 
- 
+sudo apt-get install meld
+
 To download coinbase data
 ----------------------------------
 wget https://gist.githubusercontent.com/drewx2/17841067e5fb154a98da/raw/3d1d323d2ba9f12e5a900906b207708083079089/coinbase-websocket
