@@ -8,6 +8,7 @@ Then on the VM, "Devices" -> "Insert Guest Additions CD" to  install the guest a
 
 # Install Emacs
 sudo apt-get install emacs
+suod apt-get install terminator
 
 sudo apt-get install apt-file
 apt-file update
