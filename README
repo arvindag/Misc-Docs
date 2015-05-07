@@ -141,6 +141,7 @@ sudo apt-get install libpcre3 libpcre3-dev
 sudo apt-get install pypy
 sudo apt-get install -y python-pip python-virtualenv
 sudo apt-get install idle
+sudo apt-get install valgrind
 
 sudo apt-get install dkms
 sudo apt-get install ntp # for date and time sync
