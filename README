@@ -166,3 +166,9 @@ mv coinbase.js coinbase
 cd coinbase/
 node coinbase.js 
 
+
+For Office Mac OSX:
+-------------------
+Install OSXFUSE and SSHFS from https://osxfuse.github.io/
+Install Iterm2, emacs etc
+
