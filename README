@@ -170,5 +170,5 @@ node coinbase.js
 For Office Mac OSX:
 -------------------
 Install OSXFUSE and SSHFS from https://osxfuse.github.io/
-Install Iterm2, emacs etc
+Install Iterm2, Sublime
 
