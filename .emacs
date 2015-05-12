@@ -9,7 +9,15 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Ubuntu Mono" :foundry "unknown" :slant normal :weight normal :height 113 :width normal)))))
+ '(default ((t (:family "Monaco" :foundry "unknown" :slant normal :weight normal :height 113 :width normal)))))
+
+(add-to-list 'default-frame-alist '(left . 0))
+(add-to-list 'default-frame-alist '(top . 0))
+(add-to-list 'default-frame-alist '(height . 65))
+(add-to-list 'default-frame-alist '(width . 180))
+
+(setq frame-title-format '(buffer-file-name "%f"(dired-directory dired-directory "%b")))
+
 (global-set-key   [f2]     'set-mark-command)            ; F2
 (global-set-key   [f3]     'copy-to-register)            ; F3
 (global-set-key   [f4]     'insert-register)             ; F4
