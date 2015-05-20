@@ -51,6 +51,7 @@ alias clt='clear; ls -alt'
 sudo apt-get install git gitk git-gui
 git config --global user.name "Arvind Agrawal"
 git config --global user.email "arvindag@gmail.com"
+git config --global core.editor vi
 
 vi ~/.gitconfig # to see the git config entries
 
