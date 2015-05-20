@@ -171,4 +171,7 @@ For Office Mac OSX:
 -------------------
 Install OSXFUSE and SSHFS from https://osxfuse.github.io/
 Install Iterm2, Sublime
+sudo easy_install pip
+sudo pip install pandas
+
 
