@@ -175,4 +175,12 @@ Install Iterm2, Sublime
 sudo easy_install pip
 sudo pip install pandas
 
+Installing Valgrind on mac OSX:
+--------------------------------
+svn co svn://svn.valgrind.org/valgrind/trunk valgrind
+cd valgrind
+./autogen.sh
+./configure
+make
+make install
 
