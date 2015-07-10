@@ -171,7 +171,14 @@ node coinbase.js
 For Office Mac OSX:
 -------------------
 Install OSXFUSE and SSHFS from https://osxfuse.github.io/
-Install Iterm2, Sublime
+Install Xcode from Apple AppStore
+Install Iterm2 (from www.iterm2.com)
+Sublime (http://www.sublimetext.com/2)
+Get better .bashrc, .profile and git-prompt.sh files from other users
+install macports (https://guide.macports.org/chunked/installing.macports.html)
+sudo port install tree
+sudo port install emacs
+
 sudo easy_install pip
 sudo pip install pandas
 
