@@ -19,7 +19,7 @@ sudo apt-get install libtiff4-dev
 sudo apt-get install libssl-dev
 sudo apt-get install openssl
 sudo apt-get install gnome-system-tools
-sudo apt-get install gnone-session-fallback
+sudo apt-get install gnome-session-fallback # Will go back to the older version without compiz and uses Gnome. Ver useful
 sudo apt-get install tree
 sudo apt-get install vim
 sudo apt-get install build-essentials
