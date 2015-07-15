@@ -122,3 +122,6 @@ fi
 source /etc/bash_completion.d/git-prompt
 PS1=$PS1'$(__git_ps1 "\[\e[0;32m\](%s) \[\e[0m\]")'
 
+CUNEIFORM_FS_PATH=~/PeerNova/fs_path
+export CUNEIFORM_FS_PATH
+
