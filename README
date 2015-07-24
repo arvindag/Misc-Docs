@@ -23,6 +23,7 @@ sudo apt-get install gnome-session-fallback # Will go back to the older version 
 sudo apt-get install tree
 sudo apt-get install vim
 sudo apt-get install build-essentials
+sudo apt-get install openssh-server # for sshd daemon running
 
 Install Gimp:
 sudo add-apt-repository ppa:otto-kesselgulasch/gimp
