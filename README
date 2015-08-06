@@ -1,8 +1,7 @@
-First file with some commands 
 
-Install VirtualBox
+Install VirtualBox from virtualbox.com
 
-Start a New VM, 64 GB VDI, 4096 MB RAM, Dynamic Allocation using the amd64.iso file
+Start a New VM, 64 GB VDI,  8GB RAM, Dynamic Allocation using the *amd64.iso file
 
 Then on the VM, "Devices" -> "Insert Guest Additions CD" to  install the guest additions for Ubuntu
 
@@ -25,16 +24,6 @@ sudo apt-get install vim
 sudo apt-get install build-essentials
 sudo apt-get install openssh-server # for sshd daemon running
 
-Install Gimp:
-sudo add-apt-repository ppa:otto-kesselgulasch/gimp
-sudo apt-get update
-sudo apt-get install gimp
-
-Gimp PlugIn registry:
-sudo add-apt-repository ppa:otto-kesselgulasch/gimp
-sudo apt-get update
-sudo apt-get install gimp-plugin-registry
-
 Copy ~/.emacs file from another email
 
 vi ~/.bashrc and add
@@ -56,6 +45,8 @@ git config --global core.editor vi
 
 vi ~/.gitconfig # to see the git config entries
 
+Not needed by everybody:
+------------------------
 # ssh key generation
 cd ~
 mkdir .ssh
@@ -82,8 +73,6 @@ run 'ssh-all ~/.ssh/id_dsa.personalpn' to include it
 # Clone github files to local area
 mkdir ~/PeerNova
 cd PeerNova
-mkdir master
-cd master
 git clone git@github.com:peernova/Peer-Audit.git
 git clone git@github.com:peernova/Eldorado.git
 
@@ -159,15 +148,14 @@ npm install twit
 
 sudo apt-get install meld
 
-To download coinbase data
-----------------------------------
+To download coinbase data (not needed now)
+------------------------------------------
 wget https://gist.githubusercontent.com/drewx2/17841067e5fb154a98da/raw/3d1d323d2ba9f12e5a900906b207708083079089/coinbase-websocket
 mv coinbase-websocket coinbase.js
 mkdir coinbase
 mv coinbase.js coinbase
 cd coinbase/
 node coinbase.js 
-
 
 For Office Mac OSX:
 -------------------
@@ -191,4 +179,3 @@ cd valgrind
 ./configure
 make
 make install
-
