@@ -97,16 +97,6 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-# some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-alias lt='ls -altr'
-alias c=clear
-alias h=history
-alias clt='clear; ls -alt'
-alias rm='rm -i'
-
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
@@ -118,10 +108,22 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# some more ls aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias lt='ls -altr'
+alias c=clear
+alias h=history
+alias clt='clear; ls -alt'
+alias rm='rm -i'
+
+PATH=~/bin:$PATH
+
 # to set up the git prompt on top of standard prompt
 source /etc/bash_completion.d/git-prompt
 PS1=$PS1'$(__git_ps1 "\[\e[0;32m\](%s) \[\e[0m\]")'
 
-CUNEIFORM_FS_PATH=~/PeerNova/fs_path
-export CUNEIFORM_FS_PATH
+export CUNEIFORM_FS_PATH=~/PeerNova/fs_path
+export LD_LIBRARY_PATH=~/PeerNova/cuneiform/lib
 
