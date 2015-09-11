@@ -1,28 +1,27 @@
 
-Install VirtualBox from virtualbox.com
+### Install VirtualBox
+Go to www.virtualbox.com
 
 Start a New VM, 64 GB VDI,  8GB RAM, Dynamic Allocation using the *amd64.iso file
 
 Then on the VM, "Devices" -> "Insert Guest Additions CD" to  install the guest additions for Ubuntu
 
-# Install Emacs
-sudo apt-get install emacs
-suod apt-get install terminator
+### Updated to Ubuntu
+Install Emacs
 
-sudo apt-get install apt-file
-apt-file update
-
-sudo apt-get update
-
-sudo apt-get install libtiff4-dev
-sudo apt-get install libssl-dev
-sudo apt-get install openssl
-sudo apt-get install gnome-system-tools
-sudo apt-get install gnome-session-fallback # Will go back to the older version without compiz and uses Gnome. Ver useful
-sudo apt-get install tree
-sudo apt-get install vim
-sudo apt-get install build-essentials
-sudo apt-get install openssh-server # for sshd daemon running
+    $ sudo apt-get install terminator
+    $ sudo apt-get install emacs
+    $ sudo apt-get install apt-file
+    $ apt-file update
+    $ sudo apt-get update
+    $ sudo apt-get install libtiff4-dev
+    $ sudo apt-get install libssl-dev
+    $ sudo apt-get install openssl
+    $ sudo apt-get install gnome-system-tools
+    $ sudo apt-get install gnome-session-fallback # Will go back to the older version without compiz and uses Gnome. Very useful
+    $ sudo apt-get install tree vim
+    $ sudo apt-get install build-essentials
+    $ sudo apt-get install openssh-server # for sshd daemon running
 
 Copy ~/.emacs file from another email
 
@@ -37,7 +36,7 @@ alias h=history
 alias rm='rm -i'
 alias clt='clear; ls -alt'
 
-
+### Git setup
 sudo apt-get install git gitk git-gui
 git config --global user.name "Arvind Agrawal"
 git config --global user.email "arvindag@gmail.com"
@@ -70,7 +69,7 @@ ssh -T git@github.com
 Please make sure that the 'ssh-add -l' command lists the id_dsa.personalpn file else
 run 'ssh-all ~/.ssh/id_dsa.personalpn' to include it
 
-# Clone github files to local area
+Clone github files to local area
 mkdir ~/PeerNova
 cd PeerNova
 git clone git@github.com:peernova/Peer-Audit.git
