@@ -180,3 +180,7 @@ cd valgrind
 ./configure
 make
 make install
+
+Bitcoin and Picocoin download:
+git clone https://github.com/bitcoin/bitcoin.git
+git clone https://github.com/picocoin/picocoin.git
