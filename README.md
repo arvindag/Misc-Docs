@@ -1,16 +1,17 @@
 
-### Install VirtualBox
+#### Install VirtualBox
 Go to www.virtualbox.com
 
 Start a New VM, 64 GB VDI,  8GB RAM, Dynamic Allocation using the *amd64.iso file
 
 Then on the VM, "Devices" -> "Insert Guest Additions CD" to  install the guest additions for Ubuntu
 
-### Updated to Ubuntu
-Install Emacs
+#### Updated to Ubuntu
 
+    $ sudo apt-get install emacs24 emacs24-el emacs24-common-non-dfsg
     $ sudo apt-get install terminator
     $ sudo apt-get install emacs
+    $ sudo apt-get install meld
     $ sudo apt-get install apt-file
     $ apt-file update
     $ sudo apt-get update
@@ -22,43 +23,43 @@ Install Emacs
     $ sudo apt-get install tree vim
     $ sudo apt-get install build-essentials
     $ sudo apt-get install openssh-server # for sshd daemon running
-
-Copy ~/.emacs file from another email
+    $ sudo apt-get update
+    $ sudo apt-get install libpcre3 libpcre3-dev
 
 vi ~/.bashrc and add
 
-alias lt='ls -altr'
-alias la='ls -A'
-alias l='ls -CF'
-alias ll='ls -alF'
-alias c=clear
-alias h=history
-alias rm='rm -i'
-alias clt='clear; ls -alt'
+    alias lt='ls -altr'
+    alias la='ls -A'
+    alias l='ls -CF'
+    alias ll='ls -alF'
+    alias c=clear
+    alias h=history
+    alias rm='rm -i'
+    alias clt='clear; ls -alt'
 
-### Git setup
-sudo apt-get install git gitk git-gui
-git config --global user.name "Arvind Agrawal"
-git config --global user.email "arvindag@gmail.com"
-git config --global core.editor vi
+#### Git setup
+
+    sudo apt-get install git gitk git-gui
+    git config --global user.name "Arvind Agrawal"
+    git config --global user.email "arvindag@gmail.com"
+    git config --global core.editor vi
 
 vi ~/.gitconfig # to see the git config entries
 
-Not needed by everybody:
-------------------------
 # ssh key generation
-cd ~
-mkdir .ssh
-cd .ssh/
-ssh-keygen -t dsa -C "arvindag@gmail.com"
-mv id_dsa id_dsa.personalpn
-mv id_dsa.pub id_dsa.personalpn.pub
+
+    cd ~
+    mkdir .ssh
+    cd .ssh/
+    ssh-keygen -t dsa -C "arvindag@gmail.com"
+    mv id_dsa id_dsa.personalpn
+    mv id_dsa.pub id_dsa.personalpn.pub
 
 Upload the dsa.personalpn.pub on the github.com "Settings" and "ssh keys" section
 
 vi config
 Add "
-Host githib.com
+Host github.com
     HostName github.com
     Port 22
     IdentityFile ~/.ssh/id_dsa.personalpn
@@ -70,26 +71,24 @@ Please make sure that the 'ssh-add -l' command lists the id_dsa.personalpn file 
 run 'ssh-all ~/.ssh/id_dsa.personalpn' to include it
 
 Clone github files to local area
-mkdir ~/PeerNova
-cd PeerNova
-git clone git@github.com:peernova/Peer-Audit.git
-git clone git@github.com:peernova/Eldorado.git
-git clone git.peernova.com/Cuneiform/cuneiform.git
+
+    mkdir ~/PeerNova
+    cd PeerNova
+    git clone git@github.com:peernova/Peer-Audit.git
+    git clone git@github.com:peernova/Eldorado.git
+    git clone git.peernova.com/Cuneiform/cuneiform.git
 
 cd ~/personal
-git clone git@github.com:arvindag/Misc-Docs.git
+
+    git clone git@github.com:arvindag/Misc-Docs.git
 
 To get a particular branch:
-mkdir <newdir>
-cd <newdir>
-git clone -b <branchname> git@github.com:peernova/Peer-Audit.git
 
-Install PCRE:
-sudo apt-get update
-sudo apt-get install libpcre3 libpcre3-dev
+    mkdir <newdir>
+    cd <newdir>
+    git clone -b <branchname> git@github.com:peernova/Peer-Audit.git
 
-~/.emacs setting:
------------------
+~/.emacs setting
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -129,24 +128,22 @@ sudo apt-get install libpcre3 libpcre3-dev
 (global-set-key   "\C-x\C-b" 'buffer-menu-other-window)  ; C-x C-b
 
 
-sudo apt-get install pypy
-sudo apt-get install -y python-pip python-virtualenv
-sudo apt-get install idle
-sudo apt-get install valgrind
 
-sudo apt-get install dkms
-sudo apt-get install ntp # for date and time sync
-
+    sudo apt-get install pypy
+    sudo apt-get install -y python-pip python-virtualenv
+    sudo apt-get install idle
+    sudo apt-get install valgrind
+    sudo apt-get install dkms
+    sudo apt-get install ntp # for date and time sync
 
 For NodeJS:
-------------
-sudo apt-get install nodejs
-sudo apt-get install npm
-sudo ln -s /usr/bin/nodejs /usr/sbin/node
-npm install ws
-npm install twit
 
-sudo apt-get install meld
+    sudo apt-get install nodejs
+    sudo apt-get install npm
+    sudo ln -s /usr/bin/nodejs /usr/sbin/node
+    npm install ws
+    npm install twit
+
 
 To download coinbase data (not needed now)
 ------------------------------------------
