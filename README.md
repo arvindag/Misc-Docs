@@ -25,6 +25,9 @@ Then on the VM, "Devices" -> "Insert Guest Additions CD" to  install the guest a
     $ sudo apt-get install openssh-server # for sshd daemon running
     $ sudo apt-get update
     $ sudo apt-get install libpcre3 libpcre3-dev
+    $ sudo apt-get install libboost-all-dev
+    $ sudo apt-get install aptitude
+    $ aptitude search boost 
 
 vi ~/.bashrc and add
 
