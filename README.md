@@ -8,26 +8,26 @@ Then on the VM, "Devices" -> "Insert Guest Additions CD" to  install the guest a
 
 #### Updates to Ubuntu
 
-    $ sudo apt-get install emacs24 emacs24-el emacs24-common-non-dfsg
-    $ sudo apt-get install terminator
-    $ sudo apt-get install emacs
-    $ sudo apt-get install meld
-    $ sudo apt-get install apt-file
-    $ apt-file update
-    $ sudo apt-get update
-    $ sudo apt-get install libtiff4-dev
-    $ sudo apt-get install libssl-dev
-    $ sudo apt-get install openssl
-    $ sudo apt-get install gnome-system-tools
-    $ sudo apt-get install gnome-session-fallback # Will go back to the older version without compiz and uses Gnome. Very useful
-    $ sudo apt-get install tree vim
-    $ sudo apt-get install build-essentials
-    $ sudo apt-get install openssh-server # for sshd daemon running
-    $ sudo apt-get update
-    $ sudo apt-get install libpcre3 libpcre3-dev
-    $ sudo apt-get install libboost-all-dev
-    $ sudo apt-get install aptitude
-    $ aptitude search boost 
+    sudo apt-get install emacs24 emacs24-el emacs24-common-non-dfsg
+    sudo apt-get install terminator
+    sudo apt-get install emacs
+    sudo apt-get install meld
+    sudo apt-get install apt-file
+    apt-file update
+    sudo apt-get update
+    sudo apt-get install libtiff4-dev
+    sudo apt-get install libssl-dev
+    sudo apt-get install openssl
+    sudo apt-get install gnome-system-tools
+    sudo apt-get install gnome-session-fallback # Will go back to the older version without compiz and uses Gnome. Very useful
+    sudo apt-get install tree vim
+    sudo apt-get install build-essentials
+    sudo apt-get install openssh-server # for sshd daemon running
+    sudo apt-get update
+    sudo apt-get install libpcre3 libpcre3-dev
+    sudo apt-get install libboost-all-dev
+    sudo apt-get install aptitude
+    aptitude search boost 
 
 vi ~/.bashrc and add
 
