@@ -91,7 +91,33 @@ To get a particular branch:
     mkdir <newdir>
     cd <newdir>
     git clone -b <branchname> git@github.com:peernova/Peer-Audit.git
+    
+To checkout and particular branch for push:
 
+    git branch dev-arvind
+    git checkout dev-arvind
+    git pull origin master
+    <if needed git stash apply and then make more changes>
+    git commit . -m "<message>"
+    git push origin dev-arvind
+    <Go to the Gitbub and pull/merge the commits>
+    git checkout master
+    git branch -D dev-arvind
+    git pull origin master
+    
+To checkout and particular branch for push using repo commands:
+
+    repo forall -c git branch dev-arvind
+    repo forall -c git checkout dev-arvind
+    repo forall -c git pull origin master
+    <if needed git stash apply and then make more changes>
+    git commit . -m "<message>"
+    git push origin dev-arvind
+    <Go to the Gitbub and pull/merge the commits>
+    repo forall -c git checkout master
+    repo forall -c git branch -D dev-arvind
+    repo sync
+    
 #### Emacs Setting
 ~/.emacs file settings
 
@@ -181,3 +207,4 @@ To download coinbase data (not needed now)
     ./configure
     make
     make install
+    
