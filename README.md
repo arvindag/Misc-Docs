@@ -183,9 +183,9 @@ To download coinbase data (not needed now)
 
 #### Bitcoin and Picocoin download:
 
-    git clone https://github.com/bitcoin/bitcoin.git
-    git clone https://github.com/picocoin/picocoin.git
-    
+    git clone git@github.com:bitcoin/bitcoin.git
+    git clone git@github.com:jgarzik/picocoin.git
+
 #### For Mac OSX:
 
     Install OSXFUSE and SSHFS from https://osxfuse.github.io/
