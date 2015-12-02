@@ -216,3 +216,7 @@ To download coinbase data (not needed now)
     brew install --HEAD valgrind
     
 
+#### Misc. Commands
+
+    scp arvind@10.0.0.0:~/dir1/file1.txt . # Copy file from the remote location
+    
