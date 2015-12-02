@@ -208,3 +208,11 @@ To download coinbase data (not needed now)
     make
     make install
     
+#### Installing Valgrind on mac OSX Yosemite:
+
+    install homebrew (it is a replacement for macports):
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    install valgrind via homebrew from development branch:
+    brew install --HEAD valgrind
+    
+
