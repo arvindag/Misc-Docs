@@ -118,6 +118,11 @@ To checkout and particular branch for push using repo commands:
     repo forall -c git branch -D dev-arvind
     repo sync
     
+Good Git commands:
+
+    git show HEAD@{2015-08-14}:<file_path> # to see the older version of the file
+    
+    
 #### Emacs Setting
 ~/.emacs file settings
 
