@@ -197,6 +197,7 @@ To download coinbase data (not needed now)
     Install Xcode from Apple AppStore
     Install Iterm2 (from www.iterm2.com)
     Sublime (http://www.sublimetext.com/2)
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     Get better .bashrc, .profile and git-prompt.sh files from other users
     install macports (https://guide.macports.org/chunked/installing.macports.html)
     sudo port install tree
