@@ -43,3 +43,14 @@
 (global-set-key   "\C-z"   'bury-buffer)                 ; C-z
 (global-set-key   "\C-x\C-b" 'buffer-menu-other-window)  ; C-x C-b
 
+(setq default-tab-width 4)
+(setq-default c-basic-offset 4)
+(setq-default cperl-indent-level 4)
+(setq-default js-indent-level 2)
+(setq-default tab-width 4)
+
+(setq-default indent-tabs-mode nil)
+
+; Set the c++ mode for .h files by default
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+
