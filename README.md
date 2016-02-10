@@ -8,6 +8,10 @@ Then on the VM, "Devices" -> "Insert Guest Additions CD" to  install the guest a
 
 #### Updates to Ubuntu
 
+    sudo apt-get install gnome-system-tools
+    sudo apt-get install gnome-session-fallback # Will go back to the older version without compiz and uses Gnome. Very useful
+    sudo apt-get install tree vim
+    sudo apt-get install openssh-server # for sshd daemon running
     sudo apt-get install emacs24 emacs24-el emacs24-common-non-dfsg
     sudo apt-get install terminator
     sudo apt-get install emacs
@@ -18,11 +22,7 @@ Then on the VM, "Devices" -> "Insert Guest Additions CD" to  install the guest a
     sudo apt-get install libtiff4-dev
     sudo apt-get install libssl-dev
     sudo apt-get install openssl
-    sudo apt-get install gnome-system-tools
-    sudo apt-get install gnome-session-fallback # Will go back to the older version without compiz and uses Gnome. Very useful
-    sudo apt-get install tree vim
     sudo apt-get install build-essentials
-    sudo apt-get install openssh-server # for sshd daemon running
     sudo apt-get update
     sudo apt-get install libpcre3 libpcre3-dev
     sudo apt-get install libboost-all-dev
@@ -46,6 +46,7 @@ vi ~/.bashrc and add
     git config --global user.name "Arvind Agrawal"
     git config --global user.email "arvindag@gmail.com"
     git config --global core.editor vi
+    curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -o ~/.git-prompt.sh
 
 vi ~/.gitconfig # to see the git config entries
 
@@ -73,6 +74,12 @@ Add "
 
 Please make sure that the 'ssh-add -l' command lists the id_dsa.personalpn file else
 run 'ssh-all ~/.ssh/id_dsa.personalpn' to include it
+
+vi ~/.bashrc and add
+# to set up the git prompt on top of standard prompt
+source ~/.git-prompt.sh
+PS1=$PS1'$(__git_ps1 "\[\e[0;32m\](%s) \[\e[0m\]")'
+
 
 Clone github files to local area
 
