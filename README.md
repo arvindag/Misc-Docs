@@ -49,8 +49,13 @@ vi ~/.bashrc and add
     curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -o ~/.git-prompt.sh
 
 vi ~/.gitconfig # to see the git config entries
+vi ~/.bashrc and add
 
-# ssh key generation
+    # to set up the git prompt on top of standard prompt
+    source ~/.git-prompt.sh
+    PS1=$PS1'$(__git_ps1 "\[\e[0;32m\](%s) \[\e[0m\]")'
+
+#### ssh key generation
 
     cd ~
     mkdir .ssh
@@ -74,11 +79,6 @@ Add "
 
 Please make sure that the 'ssh-add -l' command lists the id_dsa.personalpn file else
 run 'ssh-all ~/.ssh/id_dsa.personalpn' to include it
-
-vi ~/.bashrc and add
-# to set up the git prompt on top of standard prompt
-source ~/.git-prompt.sh
-PS1=$PS1'$(__git_ps1 "\[\e[0;32m\](%s) \[\e[0m\]")'
 
 
 Clone github files to local area
