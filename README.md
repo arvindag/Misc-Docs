@@ -40,21 +40,6 @@ vi ~/.bashrc and add
     alias rm='rm -i'
     alias clt='clear; ls -alt'
 
-#### Git setup
-
-    sudo apt-get install git gitk git-gui
-    git config --global user.name "Arvind Agrawal"
-    git config --global user.email "arvindag@gmail.com"
-    git config --global core.editor vi
-    curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -o ~/.git-prompt.sh
-
-vi ~/.gitconfig # to see the git config entries
-vi ~/.bashrc and add
-
-    # to set up the git prompt on top of standard prompt
-    source ~/.git-prompt.sh
-    PS1=$PS1'$(__git_ps1 "\[\e[0;32m\](%s) \[\e[0m\]")'
-
 #### ssh key generation
 
     cd ~
@@ -80,6 +65,20 @@ Add "
 Please make sure that the 'ssh-add -l' command lists the id_dsa.personalpn file else
 run 'ssh-all ~/.ssh/id_dsa.personalpn' to include it
 
+#### Git setup
+
+    sudo apt-get install git gitk git-gui
+    git config --global user.name "Arvind Agrawal"
+    git config --global user.email "arvindag@gmail.com"
+    git config --global core.editor vi
+    curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -o ~/.git-prompt.sh
+
+vi ~/.gitconfig # to see the git config entries
+vi ~/.bashrc and add
+
+    # to set up the git prompt on top of standard prompt
+    source ~/.git-prompt.sh
+    PS1=$PS1'$(__git_ps1 "\[\e[0;32m\](%s) \[\e[0m\]")'
 
 Clone github files to local area
 
@@ -125,10 +124,12 @@ To checkout and particular branch for push using repo commands:
     repo forall -c git branch -D dev-arvind
     repo sync
     
-Good Git commands:
+#### Good Git commands:
 
     git show HEAD@{2015-08-14}:<file_path> # to see the older version of the file
     git stash show -p stash@{2} # shows the stash changes for stash number 2
+    git diff mybranch master -- myfile.cs OR
+    git diff branch1:file branch2:file
     
     
 #### Emacs Setting
