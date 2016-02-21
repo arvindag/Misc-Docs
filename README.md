@@ -86,7 +86,7 @@ Clone github files to local area
     cd PeerNova
     git clone git@github.com:peernova/Peer-Audit.git
     git clone git@github.com:peernova/Eldorado.git
-    git clone git.peernova.com/Cuneiform/cuneiform.git
+    git clone git@github.com:peernova-private/cuneiform.git
 
 cd ~/personal
 
