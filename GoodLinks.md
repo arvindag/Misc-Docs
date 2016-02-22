@@ -12,6 +12,8 @@ http://ieee-security.org/TC/SPW2015/W2SP/papers/W2SP_2015_submission_10.pdf from
 https://www.voltage.com/technology/data-encryption/hpe-format-preserving-encryption/ Voltage.com article
 http://eprint.iacr.org/2009/251.pdf FPE
 
+http://eprint.iacr.org/2014/421.pdf Another good document
+
 http://www.di-mgt.com.au/feistel_bits.c.html Feistal Bits
 
 https://github.com/cisco/libfnr libfnr by Cisco guy
