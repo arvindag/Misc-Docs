@@ -1,4 +1,4 @@
-#### FPE Specs
+##### FPE (Format Preserving Encryption) Related docs
 
 http://csrc.nist.gov/publications/drafts/800-38g/sp800_38g_draft.pdf NIST Specs
 http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/bps/bps-spec.pdf BPS
@@ -14,3 +14,4 @@ http://eprint.iacr.org/2009/251.pdf FPE
 
 https://en.wikipedia.org/wiki/Luhn_algorithm Luhn Algorithm
 
+##### BitCoin related docs
