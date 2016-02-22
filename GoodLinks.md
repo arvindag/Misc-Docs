@@ -11,5 +11,6 @@ http://web.cs.ucdavis.edu/~rogaway/papers/synopsis.pdf by Phillip Rogaway
 http://ieee-security.org/TC/SPW2015/W2SP/papers/W2SP_2015_submission_10.pdf from IBM guys
 https://www.voltage.com/technology/data-encryption/hpe-format-preserving-encryption/ Voltage.com article
 http://eprint.iacr.org/2009/251.pdf FPE
+
 https://en.wikipedia.org/wiki/Luhn_algorithm Luhn Algorithm
 
