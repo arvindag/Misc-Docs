@@ -25,8 +25,24 @@ https://bitcoin.org/bitcoin.pdf Bible for BitCoin by Satoshi
 
 http://www.righto.com/2014/02/bitcoins-hard-way-using-raw-bitcoin.html Ken Shirriff's primer to bitcoin 
 
+http://codinginmysleep.com/bitcoin-in-plain-english/ BTC in english
+
+http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf FIPS 180-4 on SHS
+
 https://bitcoin.org/en/developer-reference Developer's reference 
 
-https://en.bitcoin.it/wiki/Protocol_documentation BTC Protocol in wiki 
+https://en.bitcoin.it/wiki/Protocol_documentation BTC Protocol in wiki
+
+http://dcm6srpdb0rbc.cloudfront.net/wp-content/uploads/2013/10/how-a-bitcoin-transaction-works.gif How BTC works
+
+
+##### Ubuntu on VmWare on mac
+http://hplgit.github.io/teamods/ubuntu/vmware/mac.html
+
+http://www.cyberciti.biz/tips/bash-aliases-mac-centos-linux-unix.html Some linux commands
+
+##### MIT Courses
+http://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/ CS 6.006 for Intro to Algorithms.
+
 
 
