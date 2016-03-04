@@ -45,4 +45,6 @@ http://www.cyberciti.biz/tips/bash-aliases-mac-centos-linux-unix.html Some linux
 http://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/ CS 6.006 for Intro to Algorithms.
 
 
+##### REST docs
+http://rest.elkstein.org/2008/02/what-is-rest.html Learn Rest
 
