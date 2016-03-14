@@ -235,3 +235,8 @@ To download coinbase data (not needed now)
 
     scp arvind@10.0.0.0:~/dir1/file1.txt . # Copy file from the remote location
     
+#### Running valgrind
+
+    valgrind -v --tool=memcheck --leak-check=full --track-origins=yes --log-file=<log file name> <process name> <arguements>
+    
+    
