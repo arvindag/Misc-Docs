@@ -32,4 +32,14 @@ LinkedHashMap preserves the insertion order and is a subclass of HashMap.
 | Time Performance | O(1)         | O(1)          | O(log n)          | O(1)                |
 | Implementation   | buckets      | buckets       | red-black tree    | doubly-linked-list  |
 
+##### Iterators
+The iterator loops are cleaner and clearer to read and access all kinds of collections. Speed wise, it may be same or better than the for loops.
+```
+Iterator<T> iter = collection.iterator();
+while (iter.hasNext()) {
+  T obj = iter.next();
+  // Code
+}
+```
+
 
