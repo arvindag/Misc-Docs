@@ -12,3 +12,6 @@ StringBuilder is not synchronized which implies it isn’t thread safe, but is s
 | Modifiable    | No (immutable)        |   Yes (mutable)     | Yes (mutable)       |
 | Thread-Safe   | Yes                   |    Yes              | No                  |
 | Performance   | Fast                  | Very Slow           | Fast                |
+
+##### ByteBuffer
+Good link http://www.kdgregory.com/index.php?page=java.byteBuffer
