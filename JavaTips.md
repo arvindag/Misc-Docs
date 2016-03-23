@@ -6,3 +6,10 @@ performance.
 StringBuffer and StringBuilder objects are immutable and has efficient append. 
 StringBuffer is synchronized which means it is thread safe and hence you can use it when you implement threads for your methods.
 StringBuilder is not synchronized which implies it isn’t thread safe.
+
+|               | String                | StringBuffer        | StringBuilder       |
+| ------------- |:---------------------:| -------------------:| -------------------:|
+| Storage Area  | Constant String Pool  | Heap                | Heap                | 
+| Modifiable    | No (immutable)        |   Yes (mutable)     | Yes (mutable)       |
+| Thread-Safe   | Yes                   |    Yes              | No                  |
+| Performance   | Fast                  | Very Slow           | Fast                |
