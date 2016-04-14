@@ -42,4 +42,12 @@ while (iter.hasNext()) {
 }
 ```
 
+##### LinkedList Vs ArrayList
+Both ArrayList and LinkedList are implementation of List interface. Both these classes are non-synchronized and can be made synchronized explicitly by using Collections.synchronizedList method. They both maintain the elements insertion order.
+
+|                   | LinkedList    | ArrayList     |
+| ----------------- |:-------------:| -------------:|
+| Search Speed      | O(n)          | O(1)          |
+| Add/Delete        | O(1)          | O(n)          |
+| Memory Overhead   | High          | Low           |
 
