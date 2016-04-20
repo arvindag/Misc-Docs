@@ -130,6 +130,7 @@ To checkout and particular branch for push using repo commands:
     git stash show -p stash@{2} # shows the stash changes for stash number 2
     git diff mybranch master -- myfile.cs OR
     git diff branch1:file branch2:file
+    git reset --hard HEAD~100
     
     
 #### Emacs Setting
