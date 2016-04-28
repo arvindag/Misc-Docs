@@ -92,12 +92,6 @@ cd ~/personal
 
     git clone git@github.com:arvindag/Misc-Docs.git
 
-To get a particular branch:
-
-    mkdir <newdir>
-    cd <newdir>
-    git clone -b <branchname> git@github.com:peernova/Peer-Audit.git
-    
 To checkout and particular branch for push:
 
     git branch dev-arvind
@@ -130,7 +124,8 @@ To checkout and particular branch for push using repo commands:
     git stash show -p stash@{2} # shows the stash changes for stash number 2
     git diff mybranch master -- myfile.cs OR
     git diff branch1:file branch2:file
-    git reset --hard HEAD~100
+    git reset --hard HEAD~100 # Moves the head of the current branch by 100 back
+    git rebase -i HEAD~5 # will take the last 5 changes in the current branch and gives the choice to squash/merge them
     
     
 #### Emacs Setting
