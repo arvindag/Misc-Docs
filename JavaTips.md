@@ -51,3 +51,6 @@ Both ArrayList and LinkedList are implementation of List interface. Both these c
 | Add/Delete        | O(1)          | O(n)          |
 | Memory Overhead   | High          | Low           |
 
+LinkedList and PriorityQueue are 2 implementations of the Queue collection interface.
+LinkedList and ArrayDeque are the 2 implementaion of the Deque (Double Ended Queue) collection interface.
+
