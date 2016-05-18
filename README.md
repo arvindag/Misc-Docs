@@ -78,6 +78,7 @@ vi ~/.bashrc and add
 
     # to set up the git prompt on top of standard prompt
     source ~/.git-prompt.sh
+    GIT_PS1_SHOWDIRTYSTATE=true
     PS1=$PS1'$(__git_ps1 "\[\e[0;32m\](%s) \[\e[0m\]")'
 
 Clone github files to local area
