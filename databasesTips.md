@@ -9,3 +9,6 @@ So, what is an index? Well, an index is a data structure (most commonly a B- tre
 
 #### Clustered index Vs non-CLustered Index
 http://stackoverflow.com/questions/1251636/what-do-clustered-and-non-clustered-index-actually-mean is okay
+
+#### Elastic Search 101
+http://joelabrahamsson.com/elasticsearch-101/ is a good start
