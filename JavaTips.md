@@ -56,3 +56,6 @@ LinkedList and ArrayDeque are the 2 implementaion of the Deque (Double Ended Que
 
 ####CheckStyle:
 https://github.com/checkstyle/checkstyle/blob/master/src/main/resources/google_checks.xml
+
+#### Good document for Java Coding standard by JPL
+http://lars-lab.jpl.nasa.gov/jpl-java-standard.pdf
