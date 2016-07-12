@@ -12,3 +12,5 @@ http://stackoverflow.com/questions/1251636/what-do-clustered-and-non-clustered-i
 
 #### Elastic Search 101
 http://joelabrahamsson.com/elasticsearch-101/ is a good start
+
+package on top of elasticsearch named elastic https://github.com/olivere/elastic/tree/v3.0.42
