@@ -14,3 +14,9 @@ http://stackoverflow.com/questions/1251636/what-do-clustered-and-non-clustered-i
 http://joelabrahamsson.com/elasticsearch-101/ is a good start
 
 package on top of elasticsearch named elastic https://github.com/olivere/elastic/tree/v3.0.42
+
+#### Kubernetes
+
+http://christopher5106.github.io/continous/deployment/2016/05/02/deploy-instantly-from-your-host-to-AWS-EC2-and-Google-Cloud-with-kubernetes.html is a good start on AWS and GC
+
+http://kubernetes.io/docs/getting-started-guides/aws/ is good start for kubernetes on AWS
