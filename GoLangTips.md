@@ -1,6 +1,8 @@
 #### Go lang Tour
 https://golang.org/ is the site to start learning Go language. Another good page is https://gobyexample.com/
 
+Go code formatting command is ```sh go fmt <filename>.go```
+
 Some of the useful packages are:
 
 http https://golang.org/pkg/net/http/
