@@ -1,5 +1,5 @@
 #### Go lang Tour
-https://golang.org/ is the site to start learning Go language
+https://golang.org/ is the site to start learning Go language. Another good page is https://gobyexample.com/
 
 Some of the useful packages are:
 
