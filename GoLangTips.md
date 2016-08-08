@@ -28,4 +28,6 @@ https://www.digitalocean.com/community/tutorials/openssl-essentials-working-with
 #### Kingpin
 https://github.com/alecthomas/kingpin is a good wrapper on top of flags and much better and versatile to use.
 
+#### Tablewriter
+https://github.com/olekukonko/tablewriter for simple ascii tables similar to CSV format
 
