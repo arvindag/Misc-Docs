@@ -25,3 +25,7 @@ Protobuf: http://www.minaandrawos.com/2014/05/27/practical-guide-protocol-buffer
 For openssl keys:
 https://www.digitalocean.com/community/tutorials/openssl-essentials-working-with-ssl-certificates-private-keys-and-csrs and https://msol.io/blog/tech/create-a-self-signed-ssl-certificate-with-openssl/
 
+#### Kingpin
+https://github.com/alecthomas/kingpin is a good wrapper on top of flags and much better and versatile to use.
+
+
