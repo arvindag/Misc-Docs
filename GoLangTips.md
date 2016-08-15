@@ -31,3 +31,5 @@ https://github.com/alecthomas/kingpin is a good wrapper on top of flags and much
 #### Tablewriter
 https://github.com/olekukonko/tablewriter for simple ascii tables similar to CSV format
 
+#### Simple REST server
+http://thenewstack.io/make-a-restful-json-api-go/ is a good example.
