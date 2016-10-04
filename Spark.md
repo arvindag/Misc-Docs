@@ -8,3 +8,5 @@ Introduction to AmpLab Spark Internals by Matei Zaharia: https://www.youtube.com
 Parallel programming in Spark by Matei Zahari: https://www.youtube.com/watch?v=7k4yDKBYOcw
 
 Deeper understanding of Spark Internals by Aaron Davidson: https://www.youtube.com/watch?v=dmL0N3qfSc8
+
+Spark and ElasticSearch: https://www.elastic.co/guide/en/elasticsearch/hadoop/current/spark.html
