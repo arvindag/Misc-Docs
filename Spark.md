@@ -9,4 +9,5 @@ Parallel programming in Spark by Matei Zahari: https://www.youtube.com/watch?v=7
 
 Deeper understanding of Spark Internals by Aaron Davidson: https://www.youtube.com/watch?v=dmL0N3qfSc8
 
-Spark and ElasticSearch: https://www.elastic.co/guide/en/elasticsearch/hadoop/current/spark.html
+Spark and ElasticSearch: https://www.elastic.co/guide/en/elasticsearch/hadoop/current/spark.html. Also https://spark-summit.org/2014/wp-content/uploads/2014/07/Streamlining-Search-Indexing-using-Elastic-Search-and-Spark-Holden-Karau.pdf
+
