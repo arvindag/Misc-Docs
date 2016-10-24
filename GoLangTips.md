@@ -1,5 +1,5 @@
 #### Go lang Tour
-https://golang.org/ is the site to start learning Go language. Another good page is https://gobyexample.com/
+https://golang.org/ is the site to start learning Go language. Another good page is https://gobyexample.com/. Good link on go data structures and memory allocation is http://research.swtch.com/godata.
 
 Go code formatting command is ```go fmt <filename>.go```
 
