@@ -16,9 +16,10 @@ http://joelabrahamsson.com/elasticsearch-101/ is a good start
 Use the ``` "tokenizer": "uax_url_email"``` to analyze emails/url instead of default ``` "tokenizer": "standard"```
 
 ```sh
-"type": "text" for full text search
-"type: "keyword" for no analysis as is
-"type": "geo_point" for geo locations
+"type": "text" for full text search.
+"type: "keyword" for no analysis as is.
+"type": "geo_point" for geo locations.
+"type": "nested", "include_in_parent": true us useful to do nested queries.
 ```
 
 Some useful commands:
