@@ -13,6 +13,18 @@ http://stackoverflow.com/questions/1251636/what-do-clustered-and-non-clustered-i
 #### Elastic Search 101
 http://joelabrahamsson.com/elasticsearch-101/ is a good start
 
+Use the ``` "tokenizer": "uax_url_email"``` to analyze emails/url instead of default ``` "tokenizer": "standard"```
+
+```sh
+"type": "text" for full text search
+"type: "keyword" for no analysis as is
+"type": "geo_point" for geo locations
+```
+
+Some useful commands:
+``` GET /client2/_mapping ```
+
+
 package on top of elasticsearch named elastic https://github.com/olivere/elastic/tree/v3.0.42
 
 #### Kubernetes
