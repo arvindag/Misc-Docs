@@ -13,7 +13,9 @@ http://stackoverflow.com/questions/1251636/what-do-clustered-and-non-clustered-i
 #### Elastic Search 101
 http://joelabrahamsson.com/elasticsearch-101/ is a good start
 
-Use the ``` "tokenizer": "uax_url_email"``` to analyze emails/url instead of default ``` "tokenizer": "standard"```
+Use the ``` "tokenizer": "uax_url_email"``` to analyze emails/url instead of default ``` "tokenizer": "standard"```.
+
+``` "date_detection": false``` can be set in the typename area also.
 
 ```sh
 "type": "text" for full text search.
