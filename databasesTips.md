@@ -15,7 +15,7 @@ http://joelabrahamsson.com/elasticsearch-101/ is a good start
 
 Use the ``` "tokenizer": "uax_url_email"``` to analyze emails/url instead of default ``` "tokenizer": "standard"```.
 
-``` "date_detection": false``` can be set in the typename area also.
+``` "date_detection": false ``` can be set in the typename area also.
 
 ```sh
 "type": "text" for full text search.
@@ -27,6 +27,7 @@ Use the ``` "tokenizer": "uax_url_email"``` to analyze emails/url instead of def
 Some useful commands:
 ``` GET /client2/_mapping ```
 
+ES can use Gobal Ordinals which is like enum on top of finite number of choices among strings to reduce the memory footprint. That way it does not need to store long strings but just small integers.
 
 package on top of elasticsearch named elastic https://github.com/olivere/elastic/tree/v3.0.42
 
