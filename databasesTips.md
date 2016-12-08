@@ -11,7 +11,7 @@ So, what is an index? Well, an index is a data structure (most commonly a B- tre
 http://stackoverflow.com/questions/1251636/what-do-clustered-and-non-clustered-index-actually-mean is okay
 
 #### Elastic Search 101
-http://joelabrahamsson.com/elasticsearch-101/ is a good start
+http://joelabrahamsson.com/elasticsearch-101/ is a good start. Good explanation on inverted index is http://techblogsearch.com/a/text-processing-part-2-inverted-index.html.
 
 Use the ``` "tokenizer": "uax_url_email"``` to analyze emails/url instead of default ``` "tokenizer": "standard"```.
 
