@@ -40,3 +40,6 @@ http://kubernetes.io/docs/getting-started-guides/aws/ is good start for kubernet
 #### Docker
 https://prakhar.me/docker-curriculum/ is a good starting document for docker and some examples using AWS and docker.
 https://blog.talpor.com/2015/01/docker-beginners-tutorial/ is also not bad. Some of the other good ones are http://blog.flux7.com/blogs/docker/docker-tutorial-series-part-1-an-introduction, etc.
+
+#### Cassandra
+When data is written to Cassandra, it is first written to a commit log, which ensures full data durability and safety. Data is also written to an in-memory structure called a memtable, which is eventually flushed to a disk structure called an sstable (sorted strings table).
