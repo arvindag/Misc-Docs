@@ -3,14 +3,14 @@ http://stackoverflow.com/questions/1108/how-does-database-indexing-work is a goo
 
 https://en.wikipedia.org/wiki/Database_index is on wiki
 
-#### What is an index?
+##### What is an index?
 
 So, what is an index? Well, an index is a data structure (most commonly a B- tree) that stores the values for a specific column in a table. An index is created on a column of a table. So, the key points to remember are that an index consists of column values from one table, and that those values are stored in a data structure. The index is a data structure – remember that.
 
-#### Clustered index Vs non-CLustered Index
+##### Clustered index Vs non-CLustered Index
 http://stackoverflow.com/questions/1251636/what-do-clustered-and-non-clustered-index-actually-mean is okay
 
-#### Elastic Search 101
+##### Elastic Search 101
 http://joelabrahamsson.com/elasticsearch-101/ is a good start. Good explanation on inverted index is http://techblogsearch.com/a/text-processing-part-2-inverted-index.html.
 
 Use the ``` "tokenizer": "uax_url_email"``` to analyze emails/url instead of default ``` "tokenizer": "standard"```.
@@ -30,6 +30,10 @@ Some useful commands:
 ES can use Gobal Ordinals which is like enum on top of finite number of choices among strings to reduce the memory footprint. That way it does not need to store long strings but just small integers.
 
 package on top of elasticsearch named elastic https://github.com/olivere/elastic/tree/v3.0.42
+
+##### Elasticsearch schemaless issues
+https://www.ctl.io/developers/blog/post/improved-elasticsearch-indexing shows how schemaless also maps internally to schema as Lucene uses schema.
+https://www.elastic.co/blog/found-elasticsearch-mapping-introduction shows the introduction to creating schema.
 
 #### Kubernetes
 
