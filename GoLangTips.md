@@ -19,7 +19,7 @@ GRPC Security: https://github.com/grpc/grpc-go/blob/master/examples/route_guide/
 Another one using protobuf at http://www.minaandrawos.com/2014/05/27/practical-guide-protocol-buffers-protobuf-go-golang/
 
 ##### Protobuf
-Protobuf: http://www.minaandrawos.com/2014/05/27/practical-guide-protocol-buffers-protobuf-go-golang/ good start
+Protobuf: http://www.minaandrawos.com/2014/05/27/practical-guide-protocol-buffers-protobuf-go-golang/ good start. Also https://developers.google.com/protocol-buffers/docs/proto3 has good details for proto3.
 
 #### Security
 For openssl keys:
