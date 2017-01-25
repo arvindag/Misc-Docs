@@ -11,6 +11,8 @@ ioutil https://golang.org/pkg/io/ioutil/
 
 errors https://golang.org/pkg/errors/
 
+##### Reflections
+https://blog.golang.org/laws-of-reflection is a good starting point. Then graduate to http://blog.ralch.com/tutorial/golang-reflection/ good example site.
 ##### GRPC
 Golang usage of GRPC : https://talks.golang.org/2015/gotham-grpc.slide#1. Another good example of GRPC at http://www.grpc.io/docs/tutorials/basic/go.html.
 
