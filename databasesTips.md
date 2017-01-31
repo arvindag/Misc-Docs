@@ -18,7 +18,7 @@ Use the ``` "tokenizer": "uax_url_email"``` to analyze emails/url instead of def
 ``` "date_detection": false ``` can be set in the typename area also.
 
 ```sh
-"type": "text" for full text search.
+"type": "text" for full text search and is sent through an analyzer.
 "type: "keyword" for no analysis as is.
 "type": "geo_point" for geo locations.
 "type": "nested", "include_in_parent": true us useful to do nested queries.
