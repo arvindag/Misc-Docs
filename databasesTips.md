@@ -23,7 +23,10 @@ Use the ``` "tokenizer": "uax_url_email"``` to analyze emails/url instead of def
 "type": "geo_point" for geo locations.
 "type": "nested", "include_in_parent": true us useful to do nested queries.
 ```
-
+```sh
+"enabled: false" for just stored with no indexing. Default is true.
+"index: fasle" for Fields that are not indexed are not queryable. Default is true.
+```
 Some useful commands:
 ``` GET /client2/_mapping ```
 
