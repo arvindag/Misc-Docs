@@ -13,6 +13,8 @@ http://stackoverflow.com/questions/1251636/what-do-clustered-and-non-clustered-i
 ##### Elastic Search 101
 http://joelabrahamsson.com/elasticsearch-101/ is a good start. Good explanation on inverted index is http://techblogsearch.com/a/text-processing-part-2-inverted-index.html.
 
+Index Vs Type document: https://www.elastic.co/blog/index-vs-type
+
 Use the ``` "tokenizer": "uax_url_email"``` to analyze emails/url instead of default ``` "tokenizer": "standard"```.
 
 ``` "date_detection": false ``` can be set in the typename area also.
