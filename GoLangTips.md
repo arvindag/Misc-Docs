@@ -34,4 +34,4 @@ https://github.com/alecthomas/kingpin is a good wrapper on top of flags and much
 https://github.com/olekukonko/tablewriter for simple ascii tables similar to CSV format
 
 #### Simple REST server
-http://thenewstack.io/make-a-restful-json-api-go/ is a good example.
+http://thenewstack.io/make-a-restful-json-api-go/ is a good example. Another simple server using protobuf at https://jacobmartins.com/2016/05/24/practical-golang-using-protobuffs/
