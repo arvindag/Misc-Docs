@@ -35,3 +35,9 @@ https://github.com/olekukonko/tablewriter for simple ascii tables similar to CSV
 
 #### Simple REST server
 http://thenewstack.io/make-a-restful-json-api-go/ is a good example. Another simple server using protobuf at https://jacobmartins.com/2016/05/24/practical-golang-using-protobuffs/
+
+#### Kafka and Avro Go client
+https://github.com/Shopify/sarama for kafka client.
+https://github.com/alanctgardner/gogen-avro for avro client.
+
+
