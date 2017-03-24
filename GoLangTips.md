@@ -13,6 +13,9 @@ ioutil https://golang.org/pkg/io/ioutil/
 
 errors https://golang.org/pkg/errors/
 
+##### Rest server
+https://thenewstack.io/make-a-restful-json-api-go/
+
 ##### Reflections
 https://blog.golang.org/laws-of-reflection is a good starting point. Then graduate to http://blog.ralch.com/tutorial/golang-reflection/ good example site.
 ##### GRPC
