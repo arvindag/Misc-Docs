@@ -52,3 +52,12 @@ https://blog.talpor.com/2015/01/docker-beginners-tutorial/ is also not bad. Some
 
 #### Cassandra
 When data is written to Cassandra, it is first written to a commit log, which ensures full data durability and safety. Data is also written to an in-memory structure called a memtable, which is eventually flushed to a disk structure called an sstable (sorted strings table).
+
+#### Kafka Vs RabbitMQ
+**RabbitMQ** is broker-centric, focused around delivery guarantees between producers and consumers.
+**Kafka** is producer-centric. preserving ordered delivery within a partition. If Kafka queue is full, then it
+will drop messages and hence consumers might get get the message even once. Kafka has better performance than RabbitMQ.
+
+With **Kafka** you can do both real-time and batch processing. Ingest tons of data, route via publish-subscribe (or queuing). The broker barely knows anything about the consumer. All that’s really stored is an “offset” value that specifies where in the log the consumer left off. Unlike many integration brokers that assume consumers are mostly online, Kafka can successfully persist a lot of data, and supports “replay” scenarios. The architecture is fairly unique; topics are arranged in partitions (for parallelism), and partitions are replicated across nodes (for high availability).
+
+**RabbitMQ** is a messaging engine that follows the AMQP 0.9.1 definition of a broker. It follows a standard store-and-forward pattern where you have the option to store the data in RAM, on disk, or both. It supports a variety of message routing paradigms. RabbitMQ can be deployed in a clustered fashion for performance, and mirrored fashion for high availability. Consumers listen directly on queues, but publishers only know about “exchanges.” These exchanges are linked to queues via bindings, which specify the routing paradigm (among other things).
