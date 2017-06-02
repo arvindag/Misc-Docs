@@ -43,7 +43,26 @@ A *var* declaration creates a variable of a particular type, attached a name to 
 initial value. Each declaration has the general form *var name type = expression*.
 ###### 2.3.1 Short variable declaration
 *name := expression*
-Keep in mind that *:=* is a declaration and *=* is an assignment. If some of the variables are already
-declared in the *same* lexical block, then the short variable declaration acts like an *assignment* to those
-variables. A short variable declaration must declare at least one new variable.
+Keep in mind that *:=* is a declaration and *=* is an assignment.
+A short variable declaration does not necessarily *declare* all the variables on its left hand side. If some
+of them were already declared in the same lexical block, then the short variable decleration acts like an
+*assignment* to those variables. A short variable declaration must declare at least one new variable.
 ###### 2.3.2 Pointers
+A variable is a piece of storage containing a value. A *pointer* is the address of a variable. Pointers
+are comparable; two pointers are equal iff they point to the same variable or they are both nil. it is perfectly
+safe for a function to return the address of a local variable.
+```
+v := 1
+p := &v
+*p is same as v
+```
+Pointer aliasing is useful because it allows us to access a variable without using its name. Pointers are key to 
+the *flag* package, which uses a program's command-line arguments to set the values of certain variables distributed
+throught the program.
+```
+var n = flag.Bool("n", false, "omit trailing newline")
+var sep = flag.String("s", " ", "separator")
+```
+The variables *sep* and *n* are pointers to the flag variables, which must be accessed indirectly as *\*sep* and *\*n*.
+
+######
