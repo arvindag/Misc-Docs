@@ -71,3 +71,53 @@ of type T, initializes it to zero values of T, and returns its address, which is
 a distinct variable with a unique address.
 Since *new* is a predeclared function, and **not a keyword**, it is possible to **redefine** the name for something else within a function.
 
+###### 2.3.4 Lifetime of a variable
+The variable lives on until it becomes **unreachable**, at which point its storage might be recycled.
+```
+var global *int
+func f() {
+  var x int
+  x = 1
+  global = &x
+ }
+
+func g() {
+  y := new(int)
+  *y = 1
+}
+```
+Here, **x** must be **heap-allocated** because it is still reachable from the variable *global* after **f** has returned, despite
+being declared as a local variable; we say **x** *escapes* from **f**. Conversely, when **g** returns, the variable **\*y** becomes
+unreachable and can be recycled.
+
+##### 2.5 Type Declarations
+A **type** declaration defines a new *named type* that has the same *underlying type* as an existing type. The named type provides
+a way to separate different and perhaps incompatible uses of the underlying type so that they cannot be mixed unintentionally.
+```
+type name underlying-type
+```
+```
+type Celsius float64
+type Fahrenheit float64
+```
+The above example defines two types, **Celsius** and **Fahrenheit**, for the two temperature. Even though both have the same
+underlying types, *float64*, they are not the same type, so they **cannot be compared or combined** in arithmetic expressions. This 
+stops inadvertent errors. An explicit type *conversion* like **Celsius(t)** or **Fahrenheit(t)** is required to convert from
+a float64. **Celsius(t)** and **Fahrenheit(t)** are conversions, not function calls.
+A conversion from one type to another is allowed if both have the same underlying type, or if both are unnamed pointer types
+that point to variables of the same underlying type. These conversions change the type but not the representation of the value.
+In any case, a type conversions never fails at run time. Some special conversions might changed the representation of of the value like float64 to int conversion or string to []byte slice conversions.
+Named types also make it possible to define new behaviors for the values of the type. These behaviors are expressed as a set
+of functions associated with the type, called the type's *methods*.
+
+###### 2.6.2 Package Initialization
+If the package has multiple .go files, they are initialized in the order in which the files are given to the compiler.
+The go tool sorts the .go files by name before invoking the compiler.
+```
+func init() { /* ... */ }
+```
+Such **init()** functions can't be called or referenced, but otherwise they are normal functions. Within each file,
+**init** functions are automatically executed when the program starts, in the order in which they are declared.
+
+#### 2.7 Scope
+
