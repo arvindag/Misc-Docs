@@ -119,5 +119,16 @@ func init() { /* ... */ }
 Such **init()** functions can't be called or referenced, but otherwise they are normal functions. Within each file,
 **init** functions are automatically executed when the program starts, in the order in which they are declared.
 
-#### 2.7 Scope
+##### 2.7 Scope
+Don't confuse scope with lifetime. The scope of the declaration is a region of the program text; it is a compile time
+property. The lifetime of a variable is the range of time during execution when the variable can be referred to by other
+parts of the program. It is a run time property.
+
+#### 3 Basic Data Types
+Go types fall into 4 categories: *basic types, aggregate types, reference types and interface types*.
+Basic types like numbers, strings, booleans
+Aggregate types like arrays and structs
+Reference types includes pointers, slices, maps, functions, channels
+##### 3.1 Integers
+
 
