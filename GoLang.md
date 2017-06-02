@@ -65,4 +65,9 @@ var sep = flag.String("s", " ", "separator")
 ```
 The variables *sep* and *n* are pointers to the flag variables, which must be accessed indirectly as *\*sep* and *\*n*.
 
-######
+###### 2.3.3 The new Function
+Another way to create a variable is to use the built-in function *new*. The expression **new(T)** creates an *unnamed variable* 
+of type T, initializes it to zero values of T, and returns its address, which is a value of type *\*T*. Each call to new returns
+a distinct variable with a unique address.
+Since *new* is a predeclared function, and **not a keyword**, it is possible to **redefine** the name for something else within a function.
+
