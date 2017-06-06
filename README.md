@@ -127,6 +127,7 @@ To checkout and particular branch for push using repo commands:
     git diff branch1:file branch2:file
     git reset --hard HEAD~100 # Moves the head of the current branch by 100 back
     git rebase -i HEAD~5 # will take the last 5 changes in the current branch and gives the choice to squash/merge them
+    git pull --rebase origin master # to rebase with master, when in a branch. Resolve the conflict and push to branch after that.
     
     
 #### Emacs Setting
