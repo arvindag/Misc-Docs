@@ -126,9 +126,17 @@ parts of the program. It is a run time property.
 
 #### 3 Basic Data Types
 Go types fall into 4 categories: *basic types, aggregate types, reference types and interface types*.
-Basic types like numbers, strings, booleans
-Aggregate types like arrays and structs
-Reference types includes pointers, slices, maps, functions, channels
+**Basic** types like numbers, strings, booleans
+**Aggregate** types like arrays and structs
+**Reference** types includes pointers, slices, maps, functions, channels
 ##### 3.1 Integers
+*int* is by far the most used integer type which is signed integer.
+*rune* is a synonym for **int32** and indicates a value is a Unicode code point.
+Similarly *byte* is a synonym for uint8
+*uintptr* is suficient to hold all bits of a pointer value used only for low level programming.
+Built-in **len** function returns a signed int so that it can be used in the loops.
+Octal numbers seem to be used for exactly one purpose - file permissions on the POSIX systems.
+
+
 
 
