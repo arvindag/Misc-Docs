@@ -142,6 +142,7 @@ Octal numbers seem to be used for exactly one purpose - file permissions on the 
 * `110xxxxx 10xxxxxx                    128-2047`
 * `1110xxxx 10xxxxxx 10xxxxxx           2048-65535`
 * `11110xxx 10xxxxxx 10xxxxxx 10xxxxxx  65536 - 0x10ffff`
+
 If there are unicode string, then do not use the `len` of the string, but `utf8.RUneCountInString()`
 UTF-8 is exceptionally convinient as an interchange format, but within a program runes may be more convinient 
 because they are of uniform size and this easily indexes in arrays and slices.
