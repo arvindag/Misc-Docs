@@ -130,13 +130,23 @@ Go types fall into 4 categories: *basic types, aggregate types, reference types 
 **Aggregate** types like arrays and structs
 **Reference** types includes pointers, slices, maps, functions, channels
 ##### 3.1 Integers
-*int* is by far the most used integer type which is signed integer.
-*rune* is a synonym for **int32** and indicates a value is a Unicode code point.
-Similarly *byte* is a synonym for uint8
-*uintptr* is suficient to hold all bits of a pointer value used only for low level programming.
+* *int* is by far the most used integer type which is signed integer.
+* *rune* is a synonym for **int32** and indicates a value is a Unicode code point.
+* Similarly *byte* is a synonym for uint8
+* *uintptr* is suficient to hold all bits of a pointer value used only for low level programming.
 Built-in **len** function returns a signed int so that it can be used in the loops.
 Octal numbers seem to be used for exactly one purpose - file permissions on the POSIX systems.
 
+###### 3.5.3 UTF-8
+* `0xxxxxxx                             runes 0-127    (ASCII)`
+* `110xxxxx 10xxxxxx                    128-2047`
+* `1110xxxx 10xxxxxx 10xxxxxx           2048-65535`
+* `11110xxx 10xxxxxx 10xxxxxx 10xxxxxx  65536 - 0x10ffff`
+If there are unicode string, then do not use the `len` of the string, but `utf8.RUneCountInString()`
+UTF-8 is exceptionally convinient as an interchange format, but within a program runes may be more convinient 
+because they are of uniform size and this easily indexes in arrays and slices.
+#### 4 Composite Types
+##### 4.1 Arrays
 
 
 
