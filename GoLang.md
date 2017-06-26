@@ -9,7 +9,7 @@ from a complete specification but illustrates many of the features that are avai
 %t boolean: true or false
 %c rune (Unicode code point)
 %s string
-%q quot ed str ing "abc" or rune 'c'
+%q quoted string "abc" or rune 'c'
 %v any value in a natural format
 %T type of any value
 %% literal percent sign (no operand)
