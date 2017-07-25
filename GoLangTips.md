@@ -35,6 +35,9 @@ https://www.digitalocean.com/community/tutorials/openssl-essentials-working-with
 #### Kingpin
 https://github.com/alecthomas/kingpin is a good wrapper on top of flags and much better and versatile to use.
 
+#### Cobra
+https://github.com/spf13/viper is a best CLI for golang which includes cobra as a companion. https://medium.com/@skdomino/writing-better-clis-one-snake-at-a-time-d22e50e60056 is a good example for starting on viper.
+
 #### Tablewriter
 https://github.com/olekukonko/tablewriter for simple ascii tables similar to CSV format
 
