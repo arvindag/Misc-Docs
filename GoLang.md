@@ -243,3 +243,438 @@ and this is required if the function must modify its argument, since in a call-b
 Go, the called function receives only a copy of an argument, not a reference to the original argument.
 
 ###### 4.4.3 Struct Embedding and Anonymous Fields
+Go lets us declare a field with a type but ni name; such fields are called *anonymous fields*. The type
+of the field must be a named type or a pointer to a named type. Below, Circle and Wheel have one
+anonymous field each with Wheel.
+```
+type Point struct {
+    X, Y int
+}
+type Circle sturct {
+    Point
+    Radius int
+    }
+type Wheel struct {
+    Circle 
+    Spokes int
+}
+```
+Thanks to this emn=bedding, we can refer to the names of the leaves of the implicit tree without
+giving the intervening names:
+```
+var w Wheel
+w.X = 8         // equivalent to w.Circle.Point.X = 8
+w.Y = 9         // equivalent to w.Circle.Point.Y = 9
+w.Radius = 5    // equivalnet to w.Circle.Radius = 5
+w.Spokes = 20
+```
+Because "anonymous" fields do have implicit names, you can't have two anonymous fields of the same
+type since their names would conflict.
+
+**Why would tou want to embed a type that has not fields?**
+The answer has to do with methods. The shorthand notation used for selecting the fields of an embedded
+type works for selecting its methods as well. In effect, the outer struct type gains not just the 
+fields of the embedded type but its methods also. This mechanism is the main way that complex object
+behaviors are composed from simpler ones. *Composition* is central to object-oriented programming in Go.
+
+
+##### 4.5 JSON
+The basic JSON types are numbers (in decimal or scientific notation), booleans (true or false), and
+strings, which are sequences of Unicode code points enclosed in double quotes, with backslash escapes
+using a similar notation to Go, though JSON's *\Uhhhh* numeric escapes denote UTF-16 codes, *not runes*.
+
+A JSON array is an ordered sequence of values, written as a comma-separated list enclosed in square
+brackets. A JSON object is a mapping from *string* to *values*, written as a sequence of *name:value*
+pairs separated by commas and surrounded by braces.
+The string literals after the *Year* and *Color* field declarations are *field tags*.
+```
+type Movie struct {
+    Title string
+    Year int   `json:"released"`
+    Color bool `json:"color, omitempty"`
+    Actors []string
+}
+var movies = []Movie{
+    {Title:"Casablanca", Year: 1942, Color: false, Actors: []string{"Humphrey Bogart", "Ingrid Bergman"}}
+    // ...
+}
+```
+Converting a Go data structure like movies to JSON is called *marshaling*.
+```
+data, err := json.Marshal(movies)
+if err != nil {
+}
+```
+*Marshal* produces a byte slice containing a very long string with no extraneous white spaces. *MarshalIdent*
+produces neatly indented output.
+
+Only exported fields are marshaled, which is why we chose capitalized names for all the Go field names.
+*omitempty* field tag indicates that no JSON output should be produced if the field has the zero value for 
+its type.
+
+The inverse of *marshaling*, decoding JSON and populating a Go data structure is called *unmarshaling*, and
+is done by *json.unmarshal*. If the Go data structure only has some of the fields from the marshalled version,
+then the other fields from the JSON are ignored.
+
+##### 4.6 Text and HTML Templates
+a *template* is a string or file containing one or more of portions enclosed in double braces,
+{{...}}, called *actions*. Within an action, the **|** notation makes the result of one operation the
+argument of another, analogous to a Unix shell pipeline.
+
+```
+const templ = `{{.TotalCount}} issues:
+{{range .Items}}------------------------
+Number: {{.Number}}
+User:   {{.User.login}}
+Title:  {{.Title | printf "%.64s"}}
+Age:    {{.CreatedAt | daysAgo}} days
+{{end}}`
+```
+
+#### 5 Functions
+##### 5.1 Function Declarations
+```
+func name(paramater-list) (result-list) {
+  body
+```
+The type of a function is sometimes called its *signature*. Two functions have the same type
+or signature if they have the same sequence of parameter types and the same sequence of 
+result types.
+Arguments are passed by *value*, so the function receives a copy of each argument and 
+modifications to the copy do not affect the caller. However, if the argument contains
+some kind of reference, like a pointer, slice, map, function, or channel, then the caller
+may be affected by the modifications the function makes to the variables *indirectly*
+referred to by the argument.
+
+You may occasionally encounter a function declaration without a body, indicating that the
+function is implemented in a language other than Go. Such declaration defines the function
+signature.
+```
+package math
+func Sin(x float64) float64 // implemented in assembly language
+```
+
+##### 5.2 Recursion
+```
+package html
+
+// A NodeType is the type of a Node.
+type NodeType uint32
+
+const (
+	ErrorNode NodeType = iota
+	TextNode
+	DocumentNode
+	ElementNode
+	CommentNode
+	DoctypeNode
+	scopeMarkerNode
+)
+
+type Node struct {
+	Parent, FirstChild, LastChild, PrevSibling, NextSibling *Node
+	Type      NodeType
+	Data      string
+	Attr      []Attribute
+}
+
+```
+
+##### 5.3 Multiple Return Values
+In a function with named results, the operands of a return statement may be omitted. This is
+called a *bare return*. In functions like this one, with many return statements and several
+results, bare returns can reduce code duplication, but rarely make the code easier to
+understand.
+##### 5.4 Errors
+Go’s approach sets it apart from many other languages in which failures are reported using 
+*exceptions*, not ordinary values. Although Go does have an exception mechanism of sorts, 
+as we will see in Section 5.9, it is used only for reporting truly unexpected errors that 
+indicate a bug, not the routine errors that a robust program should be built to expect.
+
+Go programs use ordinary control-flow mechanisms like if and return to respond to errors.
+This style undeniably demands that more attention be paid to error-han- dling logic, but 
+that is precisely the point.
+###### 5.4.1 Error-Handling Strategies
+There are 5 different ways to handle errors.
+
+**First**
+First, and most common, is to propagate the error, so that a failure in a subroutine 
+becomes a failure of the calling routine.
+```
+resp, err := http.Get(url)
+     if err != nil {
+         return nil, err
+}
+```
+
+```
+     doc, err := html.Parse(resp.Body)
+     resp.Body.Close()
+     if err != nil {
+         return nil, fmt.Errorf("parsing %s as HTML: %v", url, err)
+}
+```
+The **fmt.Errorf** function formats an error message using *fmt.Sprintf* and returns a new *error*
+value. Because error messages and frequently chained together, message strings should not be
+capitalized and newlines should be avoided. The resulting errors may be long, but they will be
+self-contained when found by tools like *grep*.
+
+**Second**
+It may make sense to *retry* the failed operation, possibly with a delay between tries, and perhaps
+with a limit to number of attempts before giving up entirely.
+
+**Third** 
+If progress is impossible, the caller can print the error and stop the program gracefully,
+but this course of action should generally be reserved for the main package of a program.
+Library functions should usually propagate errors to the caller.
+
+**Fourth**
+In some cases, it’s sufficient just to log the error and then continue, perhaps with 
+*reduced* functionality.
+
+**Fifth**
+Finally, in rare cases we can safely ignore an error entirely like cleaning the tmp area.
+
+##### 5.5 Function Values
+Functions are *first-class values* in Go: like other values, function values have types,
+and they may be assigned to variables or passed to or returned from functions. A function
+value may be called like any other function. For example:
+```
+     func square(n int) int     { return n * n }
+     func negative(n int) int   { return -n }
+     func product(m, n int) int { return m * n }
+     f := square
+     fmt.Println(f(3)) // "9"
+     f = negative
+     fmt.Println(f(3))     // "-3"
+     fmt.Printf("%T\n", f) // "func(int) int"
+     f = product // compile error: can't assign f(int, int) int to f(int) int
+```
+When the function variable gets different function values, they need to have the same
+signature, else they will cause errors.
+The zero value of a function type is *nil*. Calling a nil function value causes a panic:
+The Function values may be compared with *nil*, but they are not comparable, so they may
+not be compared against each other or used as keys in a map.
+
+##### 5.6 Anonymous Functions
+Named functions can be declared only at the package level, but we can use a *function literal*
+to denote a function value within any expression. A function literal is written like a 
+function declaration, but without a name following the func keyword. It is an expression, 
+its value is called an *anonymous function*.
+
+Function literals let us define a function at its point of use. As an example, the earlier
+call to strings.Map can be rewritten as
+```
+     strings.Map(func(r rune) rune { return r + 1 }, "HAL-9000")
+```
+
+More importantly, functions defined in this way have *access to the entire lexical environment*,
+so the inner function can refer to variables from the enclosing function, as this example shows:
+```
+   gopl.io/ch5/squares
+     // squares returns a function that returns
+     // the next square number each time it is called.
+     func squares() func() int {
+         var x int
+         return func() int {
+             x++
+             return x * x
+} }
+     func main() {
+         f := squares()
+         fmt.Println(f()) // "1"
+         fmt.Println(f()) // "4"
+         fmt.Println(f()) // "9"
+         fmt.Println(f()) // "16"
+}
+```
+The squares example demonstrates that function values are not just code but can have state.
+The anonymous inner function can access and update the local variables of the enclosing
+function *squares*. These hidden variable references are why we classify functions as reference
+types and why function values are not comparable. Function values like these are implemented 
+using a technique called *closures*, and Go programmers often use this term for function values.
+
+###### 5.6.1 Caveat: Capturing Iteration Variables
+Consider a program that must create a set of directories and later remove them. We can use a 
+slice of function values to hold the clean-up operations. (For brevity, we have omitted all 
+error handling in this example.)
+````
+     var rmdirs []func()
+     for _, d := range tempDirs() {
+         dir := d               // NOTE: necessary!
+         os.MkdirAll(dir, 0755) // creates parent directories too
+         rmdirs = append(rmdirs, func() {
+             os.RemoveAll(dir)
+}) }
+     // ...do some work...
+     for _, rmdir := range rmdirs {
+         rmdir() // clean up
+}
+````
+You may be wondering why we assigned the loop variable d to a new local variable dir within the loop
+body, instead of just naming the loop variable dir as in this subtly incorrect variant:
+```
+     var rmdirs []func()
+     for _, dir := range tempDirs() {
+         os.MkdirAll(dir, 0755)
+         rmdirs = append(rmdirs, func() {
+             os.RemoveAll(dir) // NOTE: incorrect!
+}) }
+````
+The reason is a consequence of the scope rules for loop variables. In the program immediately above,
+the for loop introduces a new lexical block in which the variable dir is declared. All function 
+values created by this loop ‘‘capture’’ and share the same variable—an addressable storage 
+location, not its value at that particular moment. The value of dir is updated in successive
+iterations, so by the time the cleanup functions are called, the dir variable has been updated
+several times by the now-completed for loop. Thus dir holds the value from the final iteration,
+and consequently all calls to os.RemoveAll will attempt to remove the same directory.
+
+The risk is not unique to range-based **for** loop.
+
+##### 5.7 Variadic Functions
+A *variadic function* is one that can be called with varying numbers of arguments. The most 
+familiar examples are fmt.Printf and its variants. 
+
+To declare a variadic function, the type of the final parameter is preceded by an 
+ellipsis, ‘‘...’’, which indicates that the function may be called with any number of arguments
+ of this type.
+```
+func sum(vals ...int) int {
+    total := 0
+    for _, val := range vals {
+    total += val
+    }
+    return total
+}
+```
+```
+values := []int{1, 2, 3, 4}
+     fmt.Println(sum(values...)) // "10"
+```
+
+Although the *...int* parameter behaves like a slice within the function body, the type of a 
+variadic function is distinct from the type of a function with an ordinary slice parameter.
+```
+     func f(...int) {}
+     func g([]int)  {}
+     fmt.Printf("%T\n", f) // "func(...int)"
+     fmt.Printf("%T\n", g) // "func([]int)"
+```
+
+The *interface{}* type means that this function can accept any values at all for its final arguments.
+
+##### 5.8 Deferred Function Calls
+a *defer* statement is an ordinary function or method call prefixed by the keyword defer. The 
+function and argument expressions are evaluated when the statement is executed, but the *actual 
+call is deferred* until the function that contains the defer statement has finished, whether 
+normally, by executing a return statement or falling off the end, or abnormally, by panicking.
+Any number of calls may be deferred; they are *executed in the reverse of the order* in which they
+were deferred.
+
+Deferred functions run after return statements have updated the function’s result variables.
+Because an anonymous function can access its enclosing function’s variables, including named
+results, a deferred anonymous function can observe the function’s results.
+
+Consider the function double: 
+```
+func double(x int) int {
+return x + x
+}
+```
+By naming its result variable and adding a defer statement, we can make the function print 
+its arguments and results each time it is called.
+```
+   func double(x int) (result int) {
+         defer func() { fmt.Printf("double(%d) = %d\n", x, result) }()
+         return x + x
+}
+     _ = double(4)
+     // Output:
+     // "double(4) = 8"
+```
+This trick is overkill for a function as simple as double but may be useful in functions with
+many return statements.
+
+A deferred anonymous function can even change the values that the enclosing function returns to 
+its caller:
+```
+     func triple(x int) (result int) {
+         defer func() { result += x }()
+         return double(x)
+}
+     fmt.Println(triple(4)) // "12"
+```
+Because deferred functions aren’t executed until the very end of a function’s execution, a 
+defer statement in a loop deserves extra scrutiny. The code below could run out of file descriptors
+since no file will be closed until all files have been processed:
+```
+     for _, filename := range filenames {
+         f, err := os.Open(filename)
+         if err != nil {
+}
+return err
+}
+defer f.Close() // NOTE: risky; could run out of file descriptors
+// ...process f...
+```
+
+One solution is to move the loop body, including the defer statement, into another function 
+that is called on each iteration.
+```
+     for _, filename := range filenames {
+         if err := doFile(filename); err != nil {
+             return err
+         }
+     }
+     func doFile(filename string) error {
+         f, err := os.Open(filename)
+         if err != nil {
+              return err
+         }
+         defer f.Close()
+         // ...process f...
+     }
+```
+
+##### 5.9 Panic
+Go’s type system catches many mistakes at compile time, but others, like an out-of-bounds array
+access or nil pointer dereference, require checks at run time. When the Go runtime detects these
+mistakes, it *panics*.
+
+Although Go’s panic mechanism resembles exceptions in other languages, the situations in which 
+*panic* is used are quite different. Since a panic causes the program to crash, it is generally
+used for grave errors, such as a logical inconsistency in the program; diligent programmers 
+consider any crash to be proof of a bug in their code. In a robust program, "expected" errors,
+the kind that arise from incorrect input, misconfiguration, or failing I/O, should be handled
+gracefully; they are best dealt with using *error* values.
+
+Readers familiar with exceptions in other languages may be surprised that **runtime.Stack** can 
+print information about functions that seem to have already been ‘‘unwound.’’ Go’s panic 
+mechanism runs the deferred functions *before* it unwinds the stack.
+
+##### 5.10 Recover
+If the built-in *recover* function is called *within a deferred function* and the function
+containing the defer statement is panicking, recover ends the current state of panic and
+returns the panic value. The function that was panicking does not continue where it left 
+off but returns normally. If recover is called at any other time, it has no effect and
+returns nil.
+
+To illustrate, consider the development of a parser for a language. Even when it appears 
+to be working well, given the complexity of its job, bugs may still lurk in obscure corner
+cases. We might prefer that, instead of crashing, the parser turns these panics into ordinary
+parse errors, perhaps with an extra message exhorting the user to file a bug report.
+```
+     func Parse(input string) (s *Syntax, err error) {
+         defer func() {
+}
+    if p := recover(); p != nil {
+        err = fmt.Errorf("internal error: %v", p)
+} }()
+// ...parser...
+```
+The deferred function in Parse recovers from a panic, using the panic value to construct an
+error message; a fancier version might include the entire call stack using runtime.Stack.
+The deferred function then assigns to the err result, which is returned to the caller.
+
+#### 6 Methods
+
