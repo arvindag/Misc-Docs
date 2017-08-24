@@ -75,7 +75,7 @@ something else within a function.
 
 ###### 2.3.4 Lifetime of a variable
 The variable lives on until it becomes **unreachable**, at which point its storage might be recycled.
-```
+```go
 var global *int
 func f() {
   var x int
@@ -96,7 +96,7 @@ Conversely, when **g** returns, the variable **\*y** becomes unreachable and can
 A **type** declaration defines a new *named type* that has the same *underlying type* as an existing type.
 The named type provides a way to separate different and perhaps incompatible uses of the underlying type 
 so that they cannot be mixed unintentionally.
-```
+```go
 type name underlying-type
 ```
 ```
@@ -116,7 +116,7 @@ of functions associated with the type, called the type's *methods*.
 ###### 2.6.2 Package Initialization
 If the package has multiple .go files, they are initialized in the order in which the files are given to the compiler.
 The go tool sorts the .go files by name before invoking the compiler.
-```
+```go
 func init() { /* ... */ }
 ```
 Such **init()** functions can't be called or referenced, but otherwise they are normal functions. Within each file,
@@ -190,7 +190,7 @@ In Go, a *map* is a reference to a hash table, and a map can type is written map
 are the types of its keys and values. The key type K must be comparable using ==, so that the map can
 test whether a given key is equal to one already within it.
 ```ages := make(map[string]int)``` mapping from string to ints. Also
-```
+```go
 ages := map[string]int{
   "alice": 33,
   "charlie": 34
@@ -209,7 +209,7 @@ that maps each key to a string, with the property that *k(x) == k(y)* iff we con
 Then we create a map whose keys are strings, applying the helper function to each slice key before we access
 the map. The example below used *fmt.Sprintf* to convert a slice of strings into a single string that is 
 a suitable map key.
-```sh
+```go
 var m = make(map[string]int)
 func k(list []string] string { return fmt.Sprintf("%q", list) }
 func Add(list []string) { m[k(list)]++ }
@@ -234,7 +234,7 @@ of each of its fields.
 
 Struct values can be passed as arguments to functions and returned from them. For efficiency, larger struct
 types are usually passed to or returned from functions indirectly using a pointer.
-```
+```go
 func Bonus(e *Employee, percent int) int {
    return e.Salary * percent / 100
 } 
@@ -246,7 +246,7 @@ Go, the called function receives only a copy of an argument, not a reference to 
 Go lets us declare a field with a type but ni name; such fields are called *anonymous fields*. The type
 of the field must be a named type or a pointer to a named type. Below, Circle and Wheel have one
 anonymous field each with Wheel.
-```
+```go
 type Point struct {
     X, Y int
 }
@@ -261,7 +261,7 @@ type Wheel struct {
 ```
 Thanks to this emn=bedding, we can refer to the names of the leaves of the implicit tree without
 giving the intervening names:
-```
+```go
 var w Wheel
 w.X = 8         // equivalent to w.Circle.Point.X = 8
 w.Y = 9         // equivalent to w.Circle.Point.Y = 9
@@ -287,7 +287,7 @@ A JSON array is an ordered sequence of values, written as a comma-separated list
 brackets. A JSON object is a mapping from *string* to *values*, written as a sequence of *name:value*
 pairs separated by commas and surrounded by braces.
 The string literals after the *Year* and *Color* field declarations are *field tags*.
-```
+```go
 type Movie struct {
     Title string
     Year int   `json:"released"`
@@ -300,7 +300,7 @@ var movies = []Movie{
 }
 ```
 Converting a Go data structure like movies to JSON is called *marshaling*.
-```
+```go
 data, err := json.Marshal(movies)
 if err != nil {
 }
@@ -321,7 +321,7 @@ a *template* is a string or file containing one or more of portions enclosed in 
 {{...}}, called *actions*. Within an action, the **|** notation makes the result of one operation the
 argument of another, analogous to a Unix shell pipeline.
 
-```
+```go
 const templ = `{{.TotalCount}} issues:
 {{range .Items}}------------------------
 Number: {{.Number}}
@@ -333,7 +333,7 @@ Age:    {{.CreatedAt | daysAgo}} days
 
 #### 5 Functions
 ##### 5.1 Function Declarations
-```
+```go
 func name(paramater-list) (result-list) {
   body
 ```
@@ -349,13 +349,13 @@ referred to by the argument.
 You may occasionally encounter a function declaration without a body, indicating that the
 function is implemented in a language other than Go. Such declaration defines the function
 signature.
-```
+```go
 package math
 func Sin(x float64) float64 // implemented in assembly language
 ```
 
 ##### 5.2 Recursion
-```
+```go
 package html
 
 // A NodeType is the type of a Node.
@@ -400,14 +400,14 @@ There are 5 different ways to handle errors.
 **First**
 First, and most common, is to propagate the error, so that a failure in a subroutine 
 becomes a failure of the calling routine.
-```
+```go
 resp, err := http.Get(url)
      if err != nil {
          return nil, err
 }
 ```
 
-```
+```go
      doc, err := html.Parse(resp.Body)
      resp.Body.Close()
      if err != nil {
@@ -439,7 +439,7 @@ Finally, in rare cases we can safely ignore an error entirely like cleaning the 
 Functions are *first-class values* in Go: like other values, function values have types,
 and they may be assigned to variables or passed to or returned from functions. A function
 value may be called like any other function. For example:
-```
+```go
      func square(n int) int     { return n * n }
      func negative(n int) int   { return -n }
      func product(m, n int) int { return m * n }
@@ -464,13 +464,13 @@ its value is called an *anonymous function*.
 
 Function literals let us define a function at its point of use. As an example, the earlier
 call to strings.Map can be rewritten as
-```
+```go
      strings.Map(func(r rune) rune { return r + 1 }, "HAL-9000")
 ```
 
 More importantly, functions defined in this way have *access to the entire lexical environment*,
 so the inner function can refer to variables from the enclosing function, as this example shows:
-```
+```go
    gopl.io/ch5/squares
      // squares returns a function that returns
      // the next square number each time it is called.
@@ -498,7 +498,7 @@ using a technique called *closures*, and Go programmers often use this term for 
 Consider a program that must create a set of directories and later remove them. We can use a 
 slice of function values to hold the clean-up operations. (For brevity, we have omitted all 
 error handling in this example.)
-````
+```go
      var rmdirs []func()
      for _, d := range tempDirs() {
          dir := d               // NOTE: necessary!
@@ -510,17 +510,17 @@ error handling in this example.)
      for _, rmdir := range rmdirs {
          rmdir() // clean up
 }
-````
+```
 You may be wondering why we assigned the loop variable d to a new local variable dir within the loop
 body, instead of just naming the loop variable dir as in this subtly incorrect variant:
-```
+```go
      var rmdirs []func()
      for _, dir := range tempDirs() {
          os.MkdirAll(dir, 0755)
          rmdirs = append(rmdirs, func() {
              os.RemoveAll(dir) // NOTE: incorrect!
 }) }
-````
+```
 The reason is a consequence of the scope rules for loop variables. In the program immediately above,
 the for loop introduces a new lexical block in which the variable dir is declared. All function 
 values created by this loop ‘‘capture’’ and share the same variable—an addressable storage 
@@ -538,7 +538,7 @@ familiar examples are fmt.Printf and its variants.
 To declare a variadic function, the type of the final parameter is preceded by an 
 ellipsis, ‘‘...’’, which indicates that the function may be called with any number of arguments
  of this type.
-```
+```go
 func sum(vals ...int) int {
     total := 0
     for _, val := range vals {
@@ -546,15 +546,13 @@ func sum(vals ...int) int {
     }
     return total
 }
-```
-```
 values := []int{1, 2, 3, 4}
      fmt.Println(sum(values...)) // "10"
 ```
 
 Although the *...int* parameter behaves like a slice within the function body, the type of a 
 variadic function is distinct from the type of a function with an ordinary slice parameter.
-```
+```go
      func f(...int) {}
      func g([]int)  {}
      fmt.Printf("%T\n", f) // "func(...int)"
@@ -576,14 +574,14 @@ Because an anonymous function can access its enclosing function’s variables, i
 results, a deferred anonymous function can observe the function’s results.
 
 Consider the function double: 
-```
+```go
 func double(x int) int {
-return x + x
+    return x + x
 }
 ```
 By naming its result variable and adding a defer statement, we can make the function print 
 its arguments and results each time it is called.
-```
+```go
    func double(x int) (result int) {
          defer func() { fmt.Printf("double(%d) = %d\n", x, result) }()
          return x + x
@@ -597,7 +595,7 @@ many return statements.
 
 A deferred anonymous function can even change the values that the enclosing function returns to 
 its caller:
-```
+```go
      func triple(x int) (result int) {
          defer func() { result += x }()
          return double(x)
@@ -607,7 +605,7 @@ its caller:
 Because deferred functions aren’t executed until the very end of a function’s execution, a 
 defer statement in a loop deserves extra scrutiny. The code below could run out of file descriptors
 since no file will be closed until all files have been processed:
-```
+```go
      for _, filename := range filenames {
          f, err := os.Open(filename)
          if err != nil {
@@ -620,7 +618,7 @@ defer f.Close() // NOTE: risky; could run out of file descriptors
 
 One solution is to move the loop body, including the defer statement, into another function 
 that is called on each iteration.
-```
+```go
      for _, filename := range filenames {
          if err := doFile(filename); err != nil {
              return err
@@ -663,7 +661,7 @@ To illustrate, consider the development of a parser for a language. Even when it
 to be working well, given the complexity of its job, bugs may still lurk in obscure corner
 cases. We might prefer that, instead of crashing, the parser turns these panics into ordinary
 parse errors, perhaps with an extra message exhorting the user to file a bug report.
-```
+```go
      func Parse(input string) (s *Syntax, err error) {
          defer func() {
 }
@@ -686,7 +684,7 @@ the object’s representation directly.
 ##### 6.1 Method Declarations
 A method is declared with a variant of the ordinary function declaration in which an extra
 parameter appears before the function name.
-```
+```go
 package geometry
      import "math"
      type Point struct{ X, Y float64 }
@@ -706,7 +704,7 @@ just as we would for any other parameter. Since the receiver name will be freque
 it’s a good idea to choose something short and to be consistent across methods. A common 
 choice is the first letter of the type name, like p for Point.
 
-```
+```go
 fmt.Println(p.Distance(q))  // "5", method call
 ```
 The expression p.Distance is called a *selector*, because it selects the appropriate Distance
@@ -731,7 +729,7 @@ Because calling a function makes a copy of each argument value, if a function ne
 a variable, or if an argument is so large that we wish to avoid copying it, we must pass the
 address of the variable using a pointer. The same goes for methods that need to update the
 receiver variable: we attach them to the pointer type, such as *Point.
-```
+```go
 func (p *Point) ScaleBy(factor float64) {
     p.X *= factor
     p.Y *= factor
@@ -765,7 +763,7 @@ Consider the type ColoredPoint: gopl.io/ch6/coloredpoint
 We could have defined *ColoredPoint* as a struct of three fields, but instead we embedded a *Point* to 
 provide the X and Y fields. As we saw in Section 4.4.3, embedding lets us take a syntactic shortcut to
 defining a *ColoredPoint* that contains all the fields of Point, plus some more.
-```
+```go
      red := color.RGBA{255, 0, 0, 255}
      blue := color.RGBA{0, 0, 255, 255}
      var p = ColoredPoint{Point{1, 1}, red}
@@ -800,7 +798,7 @@ was ambiguous* because two methods were promoted from the same rank.
 The version below is functionally equivalent but groups together the two related variables in a
 single package-level variable, cache:
 
-```
+```go
      var cache = struct {
          sync.Mutex
          mapping map[string]string
@@ -818,7 +816,7 @@ single package-level variable, cache:
 The selector *p.Distance* yields a *method value*, a function that binds a method (Point.Distance) to
 a specific receiver value p. This function can then be invoked without a receiver value; it needs only
 the non-receiver arguments.
-```
+```go
 p := Point{1, 2}
 q := Point{4, 6}
 distanceFromP := p.Distance         // method value
