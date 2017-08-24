@@ -51,7 +51,7 @@ of them were already declared in the same lexical block, then the short variable
 A variable is a piece of storage containing a value. A *pointer* is the address of a variable. Pointers
 are comparable; two pointers are equal iff they point to the same variable or they are both nil. it is perfectly
 safe for a function to return the address of a local variable.
-```
+```go
 v := 1
 p := &v
 *p is same as v
@@ -59,7 +59,7 @@ p := &v
 Pointer aliasing is useful because it allows us to access a variable without using its name. Pointers are key
 to  the *flag* package, which uses a program's command-line arguments to set the values of certain variables
 distributed throught the program.
-```
+```go
 var n = flag.Bool("n", false, "omit trailing newline")
 var sep = flag.String("s", " ", "separator")
 ```
@@ -677,4 +677,175 @@ error message; a fancier version might include the entire call stack using runti
 The deferred function then assigns to the err result, which is returned to the caller.
 
 #### 6 Methods
+Although there is no universally accepted definition of object-oriented programming, for our
+purposes, an *object* is simply a value or variable that has methods, and a *method* is a function
+associated with a particular type. An object-oriented program is one that uses methods to
+express the properties and operations of each data structure so that clients need not access
+the object’s representation directly.
+
+##### 6.1 Method Declarations
+A method is declared with a variant of the ordinary function declaration in which an extra
+parameter appears before the function name.
+```
+package geometry
+     import "math"
+     type Point struct{ X, Y float64 }
+     // traditional function
+     func Distance(p, q Point) float64 {
+         return math.Hypot(q.X-p.X, q.Y-p.Y)
+}
+     // same thing, but as a method of the Point type
+     func (p Point) Distance(q Point) float64 {
+         return math.Hypot(q.X-p.X, q.Y-p.Y)
+}
+```
+The extra parameter p is called the method’s **receiver**, a legacy from early object-oriented
+languages that described calling a method as ‘‘sending a message to an object.’’
+In Go, we don’t use a special name like this or self for the receiver; we choose receiver names
+just as we would for any other parameter. Since the receiver name will be frequently used,
+it’s a good idea to choose something short and to be consistent across methods. A common 
+choice is the first letter of the type name, like p for Point.
+
+```
+fmt.Println(p.Distance(q))  // "5", method call
+```
+The expression p.Distance is called a *selector*, because it selects the appropriate Distance
+method for the receiver p of type Point. Selectors are also used to select fields of struct
+types, as in p.X. 
+
+In allowing methods to be associated with any type, Go is unlike many other object-oriented
+languages. It is often convenient to define additional behaviors for simple types such 
+as numbers, strings, slices, maps, and sometimes even functions. *Methods* may be declared
+on any named type defined in the same package, so long as its underlying type is neither
+a pointer nor an interface.
+
+All methods of a given type must have unique names, but different types can use the same
+name for a method, like the Distance methods for Point and Path; there’s no need to qualify
+function names (for example, PathDistance) to disambiguate. Here we see the first benefit to
+using methods over ordinary functions: method names can be shorter. The benefit is magnified
+for calls originating outside the package, since they can use the shorter name and omit the
+package name.
+
+##### 6.2 Methods with a Pointer Receiver
+Because calling a function makes a copy of each argument value, if a function needs to update
+a variable, or if an argument is so large that we wish to avoid copying it, we must pass the
+address of the variable using a pointer. The same goes for methods that need to update the
+receiver variable: we attach them to the pointer type, such as *Point.
+```
+func (p *Point) ScaleBy(factor float64) {
+    p.X *= factor
+    p.Y *= factor
+}
+```
+
+Named types (Point) and pointers to them (*Point) are the only types that may appear in a
+receiver declaration. Furthermore, to avoid ambiguities, method declarations are not permitted
+on named types that are themselves pointer types.
+
+If all the methods of a named type T have a receiver type of T itself (not *T), it is safe
+to copy instances of that type; calling any of its methods necessarily makes a copy. For example,
+time.Duration values are liberally copied, including as arguments to functions. But if any method
+has a pointer receiver, you should avoid copying instances of T because doing so may violate
+internal invariants. For example, copying an instance of bytes.Buffer would cause the original
+and the copy to alias (§2.3.2) the same underlying array of bytes. Subsequent method calls would
+have unpredictable effects.
+
+In some cases, *nil* is allowed to be a valid Receiver Value.
+
+##### 6.3 Composing Types by Struct Embedding
+Consider the type ColoredPoint: gopl.io/ch6/coloredpoint
+```go
+     import "image/color"
+     type Point struct{ X, Y float64 }
+     type ColoredPoint struct {
+         Point
+         Color color.RGBA
+}
+```
+We could have defined *ColoredPoint* as a struct of three fields, but instead we embedded a *Point* to 
+provide the X and Y fields. As we saw in Section 4.4.3, embedding lets us take a syntactic shortcut to
+defining a *ColoredPoint* that contains all the fields of Point, plus some more.
+```
+     red := color.RGBA{255, 0, 0, 255}
+     blue := color.RGBA{0, 0, 255, 255}
+     var p = ColoredPoint{Point{1, 1}, red}
+     var q = ColoredPoint{Point{5, 4}, blue}
+     fmt.Println(p.Distance(q.Point)) // "5"
+     p.ScaleBy(2)
+     q.ScaleBy(2)
+     fmt.Println(p.Distance(q.Point)) // "10"
+```
+The methods and variables of Point have been *promoted* to ColoredPoint. In this way, embedding allows
+complex types with many methods to be built up by the *composition* of several fields, each
+providing a few methods.
+
+If you prefer to think in terms of implementation, the embedded field instructs the compiler to
+generate additional wrapper methods that delegate to the declared methods.
+The type of an anonymous field may be a pointer to a named type, in which case fields and methods are
+promoted indirectly from the pointed-to object. A struct type may have more than one anonymous field.
+
+A struct type may have more than one anonymous field. Had we declared **ColoredPoint** as
+```go
+     type ColoredPoint struct {
+         Point
+}
+```
+then a value of this type would have all the methods of Point, all the methods of RGBA, and any
+additional methods declared on **ColoredPoint** directly. When the compiler resolves a selector such
+as p.ScaleBy to a method, it first looks for a *directly declared method named ScaleBy*, then for
+*methods promoted once* from ColoredPoint’s embedded fields, then for *methods promoted twice* from
+embedded fields within Point and RGBA, and so on. The compiler reports an *error if the selector
+was ambiguous* because two methods were promoted from the same rank.
+
+The version below is functionally equivalent but groups together the two related variables in a
+single package-level variable, cache:
+
+```
+     var cache = struct {
+         sync.Mutex
+         mapping map[string]string
+     }{
+         mapping: make(map[string]string),
+     }
+     func Lookup(key string) string {
+         cache.Lock()
+         v := cache.mapping[key]
+         cache.Unlock()
+         return v
+     }
+```
+##### 6.4 Method Values and Expressions
+The selector *p.Distance* yields a *method value*, a function that binds a method (Point.Distance) to
+a specific receiver value p. This function can then be invoked without a receiver value; it needs only
+the non-receiver arguments.
+```
+p := Point{1, 2}
+q := Point{4, 6}
+distanceFromP := p.Distance         // method value
+fmt.Println(distanceFromP(q))       // "5"
+var origin Point                    // {0, 0}
+fmt.Println(distanceFromP(origin))  // "2.23606797749979", sqrt(5)
+
+scaleP := p.ScaleBy // method value
+scaleP(2)           // p becomes (2, 4)
+scaleP(3)           //      then (6, 12)
+scaleP(10)          //      then (60, 120)
+```
+Related to the method value is the *method expression*.
+```go
+     p := Point{1, 2}
+     q := Point{4, 6}
+     distance := Point.Distance   // method expression
+     fmt.Println(distance(p, q))  // "5"
+     fmt.Printf("%T\n", distance) // "func(Point, Point) float64"
+```
+
+##### 6.5 Example: Bit Vector Type
+Sets in Go are usually implemented as a *map[T]bool*, where T is the element type. A set represented
+by a map is very flexible but, for certain problems, a specialized representation may outperform it.
+For example, in domains such as dataflow analysis where set elements are small non-negative integers,
+sets have many elements, and set operations like union and intersection are common, a *bit vector* is ideal.
+
+
+
 
