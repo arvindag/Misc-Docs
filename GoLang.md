@@ -128,15 +128,16 @@ property. The lifetime of a variable is the range of time during execution when 
 parts of the program. It is a run time property.
 
 #### 3 Basic Data Types
-Go types fall into 4 categories: *basic types, aggregate types, reference types and interface types*.
+Go types fall into **4 categories**: *basic types, aggregate types, reference types and interface types*.
 **Basic** types like numbers, strings, booleans
 **Aggregate** types like arrays and structs
 **Reference** types includes pointers, slices, maps, functions, channels
+**Interface** types which are abstract types. The above 3 are concrete types.
 ##### 3.1 Integers
 * *int* is by far the most used integer type which is signed integer.
 * *rune* is a synonym for **int32** and indicates a value is a Unicode code point.
 * Similarly *byte* is a synonym for uint8
-* *uintptr* is suficient to hold all bits of a pointer value used only for low level programming.
+* *uintptr* is sufficient to hold all bits of a pointer value used only for low level programming.
 Built-in **len** function returns a signed int so that it can be used in the loops.
 Octal numbers seem to be used for exactly one purpose - file permissions on the POSIX systems.
 
@@ -844,6 +845,111 @@ by a map is very flexible but, for certain problems, a specialized representatio
 For example, in domains such as dataflow analysis where set elements are small non-negative integers,
 sets have many elements, and set operations like union and intersection are common, a *bit vector* is ideal.
 
+##### 6.6 Encapsulation
+A variable or method of an object is said to be encapsulated if it is inaccessible to clients of
+the object. Encapsulation, sometimes called *information hiding*, is a key aspect of object-oriented
+programming.
 
+Go has only one mechanism to control the visibility of names: capitalized identifiers are exported
+from the package in which they are defined, and uncapitalized names are not. The same mechanism
+that limits access to members of a package also limits access to the fields of a struct or the
+methods of a type. As a consequence, to encapsulate an object, we must make it a struct.
 
+**Encapsulation provides three benefits.**
 
+*First*, because clients cannot directly modify the object’s variables, one need inspect fewer
+statements to understand the possible values of those variables.
+
+*Second*, hiding implementation details prevents clients from depending on things that might
+change, which gives the designer greater freedom to evolve the implementation without breaking
+API compatibility. As an example, consider the bytes.Buffer type. It is frequently used to
+accumulate very short strings, so it is a profitable optimization to reserve a little extra
+space in the object to avoid memory allocation in this common case. 
+
+The *third* benefit of encapsulation, and in many cases the most important, is that it prevents
+clients from setting an object’s variables arbitrarily.
+
+#### 7 Interfaces
+Many object-oriented languages have some notion of interfaces, but what makes Go’s interfaces
+so distinctive is that they are *satisfied implicitly*.
+##### 7.1 Interfaces as Contracts
+An interface as an *abstract type*. When you have a value of an interface type, you know nothing
+about what it is; you know only what it can do, or more precisely, what behaviors are provided by
+its methods.
+
+This freedom to substitute one type for another that satisfies the same interface is called
+*substitutability*, and is a hallmark of object-oriented programming.
+
+Declaring a String method makes a type satisfy one of the most widely used interfaces of all,
+**fmt.Stringer**:
+```go
+package fmt
+     // The String method is used to print values passed
+     // as an operand to any format that accepts a string
+     // or to an unformatted printer such as Print.
+     type Stringer interface {
+         String() string
+}
+```
+##### 7.2 Interface Types
+An interface type specifies a set of methods that a concrete type must possess to be considered
+an instance of that interface.
+
+```go
+package io
+     type Reader interface {
+         Read(p []byte) (n int, err error)
+}
+     type Closer interface {
+         Close() error
+}
+     type ReadWriter interface {
+         Reader
+         Writer
+}
+     type ReadWriteCloser interface {
+         Reader
+         Writer
+         Closer
+}
+```
+
+The syntax used above, which resembles struct embedding, lets us name another interface as a
+shorthand for writing out all of its methods. This is called *embedding an interface*. The order
+in which the methods appear is imma- terial. All that matters is the set of methods.
+
+##### 7.3 Interface Satisfaction
+A type *satisfies* an interface if it possesses all the methods the interface requires.
+For example, an \*os.Filesatisfiesio.Reader, Writer, Closer, and ReadWriter*. A \*bytes.Buffer 
+satisfies Reader, Writer, and ReadWriter, but does not satisfy Closer because it does not have
+a Close method. As a shorthand, Go programmers often say that a concrete type ‘‘is a’’ particular
+interface type, meaning that it satisfies the interface. For example, a \*bytes.Buffer is an 
+io.Writer; an \*os.File is an io.ReadWriter.
+
+The assignability rule (§2.4.2) for interfaces is very simple: an expression may be assigned to an
+interface only if its type satisfies the interface.
+
+Like an envelope that wraps and conceals the letter it holds, an interface wraps and conceals the
+concrete type and value that it holds. Only the methods revealed by the interface type may be called,
+even if the concrete type has others.
+
+An interface with more methods, such as io.ReadWriter, tells us more about the values it contains,
+and places greater demands on the types that implement it, than does an interface with fewer methods
+such as io.Reader. So what does the type interface{}, which has no methods at all, tell us about the
+concrete types that satisfy it?
+
+That’s right: nothing. This may seem useless, but in fact the type interface{}, which is called the
+empty interface type, is indispensable. Because the empty interface type places no demands on the
+types that satisfy it, we can *assign any value to the empty interface*.
+
+Of course, having created an interface{} value containing a boolean, float, string, map, pointer,
+or any other type, we can do nothing directly to the value it holds since the interface has no methods.
+We need a way to get the value back out again. We’ll see how to do that using a *type assertion* in
+Section 7.10.
+
+Each grouping of concrete types based on their shared behaviors can be expressed as an interface type.
+Unlike class-based languages, in which the set of interfaces satisfied by a class is explicit, in Go
+we can define new abstractions or groupings of interest when we need them, without modifying the
+declaration of the concrete type. This is particularly useful when the concrete type comes from a
+package written by a different author. Of course, there do need to be underlying commonalities in
+the concrete types.
