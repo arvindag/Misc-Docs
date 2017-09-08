@@ -97,9 +97,9 @@ A **type** declaration defines a new *named type* that has the same *underlying 
 The named type provides a way to separate different and perhaps incompatible uses of the underlying type 
 so that they cannot be mixed unintentionally.
 ```go
-type name underlying-type
+type name <underlying-type>
 ```
-```
+```go
 type Celsius float64
 type Fahrenheit float64
 ```
@@ -225,7 +225,7 @@ in a directed graph.
 
 ``` var graph = make(map[string]map[string]bool)``` which is equal to
 
-``` var graph = male(map[from]map[to]bool)```
+```go var graph = make(map[from]map[to]bool)```
 
 ##### 4.4 Structs
 A *struct* is an aggregate data type that groups together zero or more named values of arbitrary types as
@@ -663,8 +663,8 @@ to be working well, given the complexity of its job, bugs may still lurk in obsc
 cases. We might prefer that, instead of crashing, the parser turns these panics into ordinary
 parse errors, perhaps with an extra message exhorting the user to file a bug report.
 ```go
-     func Parse(input string) (s *Syntax, err error) {
-         defer func() {
+func Parse(input string) (s *Syntax, err error) {
+    defer func() {
 }
     if p := recover(); p != nil {
         err = fmt.Errorf("internal error: %v", p)
@@ -759,7 +759,7 @@ Consider the type ColoredPoint: gopl.io/ch6/coloredpoint
      type ColoredPoint struct {
          Point
          Color color.RGBA
-}
+    }
 ```
 We could have defined *ColoredPoint* as a struct of three fields, but instead we embedded a *Point* to 
 provide the X and Y fields. As we saw in Section 4.4.3, embedding lets us take a syntactic shortcut to
@@ -787,7 +787,7 @@ A struct type may have more than one anonymous field. Had we declared **ColoredP
 ```go
      type ColoredPoint struct {
          Point
-}
+    }
 ```
 then a value of this type would have all the methods of Point, all the methods of RGBA, and any
 additional methods declared on **ColoredPoint** directly. When the compiler resolves a selector such
@@ -889,7 +889,7 @@ package fmt
      // or to an unformatted printer such as Print.
      type Stringer interface {
          String() string
-}
+    }
 ```
 ##### 7.2 Interface Types
 An interface type specifies a set of methods that a concrete type must possess to be considered
@@ -953,3 +953,73 @@ we can define new abstractions or groupings of interest when we need them, witho
 declaration of the concrete type. This is particularly useful when the concrete type comes from a
 package written by a different author. Of course, there do need to be underlying commonalities in
 the concrete types.
+
+##### 7.4 Parsing Flags with flag.Value
+We’ll see how another standard interface, *flag.Value*, helps us define new notations for
+command-line flags.
+```go
+    var period = flag.Duration("period", 1*time.Second, "sleep period")
+     func main() {
+         flag.Parse()
+         fmt.Printf("Sleeping for %v...", *period)
+         time.Sleep(*period)
+         fmt.Println()
+}
+```
+The flag.Duration function creates a flag variable of type time.Duration and allows the user
+to specify the duration in a variety of user-friendly formats, including the same notation
+printed by the **String** method. 
+```go
+    package flag
+     // Value is the interface to the value stored in a flag.
+     type Value interface {
+         String() string
+         Set(string) error
+}
+```
+The *String* method formats the flag’s value for use in command-line help messages; thus every
+*flag.Value* is also a *fmt.Stringer*. The *Set* method parses its string argument and updates
+the flag value. In effect, the *Set* method is the inverse of the String method, and it is good
+practice for them to use the same notation.
+
+##### 7.5 Interface Values
+Conceptually, a *value* of an *interface type*, or *interface value*, has two components,
+a *concrete type* and a *value of that type*. These are called the interface’s *dynamic type*
+and *dynamic value*.
+
+For a statically typed language like Go, *types are a compile-time concept*, so a *type is not
+a value*.
+
+In the four statements below, the variable w takes on three different values. (The initial
+and final values are the same.)
+
+```go
+    var w io.Writer
+     w = os.Stdout
+     w = new(bytes.Buffer)
+     w = nil
+```
+```go
+    var w io.Writer
+    var <Interface Value> <Interface Type>
+    w is Interface Value
+    io.Write is Interface Type
+```
+In Go, variables are always initialized to a well-defined value, and interfaces are no exception.
+The *zero value* for an interface has both its type and value components set to *nil*.
+
+|                   |   w               |              |                    |
+|-------------------|:------------------|:-------------|-------------------:|
+| Dynamic Type      |   nil             |              |                    |
+| Dynamic Value     |   nil             |              |                    |
+
+                      A nil Interface Value
+
+|                   |   w               |              |                    |
+|-------------------|:------------------|:-------------|-------------------:|
+| Dynamic Type      |   *os.File        |              |  os.File           |
+| Dynamic Value     |                   |              |  fd int=1 (stdout) |
+
+                      An Interface value containing an *os.File pointer
+
+
