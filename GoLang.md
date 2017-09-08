@@ -1,8 +1,8 @@
 #### 1 Tutorial
 ##### 1.3 
-Printf has overadozen such conversions, which Go programmers cal l verb s. This table is far
+Printf has over a dozen such conversions, which Go programmers call verbs. This table is far
 from a complete specification but illustrates many of the features that are available:
-```
+```sh
 %d decimal integer
 %x, %o, %b integer in hexadecimal, octal, binary
 %f, %g, %e floating-point number: 3.141593 3.141592653589793 3.141593e+00
@@ -1015,11 +1015,94 @@ The *zero value* for an interface has both its type and value components set to 
 
                       A nil Interface Value
 
+An interface value is described as nil or non-nil based on its dynamic type,
+so this is a nil interface value.
+
+```go
+    w = os.Stdout
+```
+
 |                   |   w               |              |                    |
 |-------------------|:------------------|--------------|--------------------|
 | Dynamic Type      |   *os.File        |              |  os.File           |
-| Dynamic Value     |   --------------> | ---------->  |  fd int=1 (stdout) |
+| Dynamic Value     |          -------> | ---------->  |  fd int=1 (stdout) |
 
                       An Interface value containing an *os.File pointer
 
+The interface value’s *dynamic type* is set to the type descriptor for the pointer
+type *\*os.File*, and its *dynamic value* holds a *copy of os.Stdout*, which is a
+pointer to the os.File variable representing the standard output of the process. 
 
+In general, we cannot know at compile time what the *dynamic type* of an interface
+value will be, so a call through an interface must use *dynamic dispatch*. Instead
+of a direct call, the compiler must generate code to obtain the address of the
+method named Write from the type descriptor, then make an indirect call to that
+address. 
+
+```go
+    w = new(bytes.Buffer)
+```
+
+|                   |   w               |              |                    |
+|-------------------|:------------------|--------------|--------------------|
+| Dynamic Type      |   *bytes.Buffer   |              |  bytes.Buffer      |
+| Dynamic Value     |          -------> | ---------->  |  data []byte       |
+
+                      An Interface value containing an *bytes.Buffer pointer
+
+An *interface value* can hold arbitrarily large dynamic values.
+
+Two *interface values are equal* if both are nil, or if their dynamic types are
+identical and their dynamic values are equal according to the usual behavior
+of == for that type. Because *interface values are comparable*, they may be used
+as the keys of a map or as the operand of a switch statement.
+
+However, if two interface values are compared and have the same dynamic type,
+but that type is not comparable (a slice, for instance), then the comparison
+fails with a panic.
+
+###### 7.5.1 Caveat: An Interface Containing a Nil Pointer Is Non-Nil
+**A nil interface value, which contains no value at all, is not the same as
+an interface value containing a pointer that happens to be nil.**
+
+|                   |   w               |              |                    |
+|-------------------|:------------------|--------------|------------------- |
+| Dynamic Type      |   *bytes.Buffer   |              |  not nil           |
+| Dynamic Value     |   nil             |              |                    |
+
+                      A non-nil Interface containing a nil pointer
+
+##### 7.6 Sorting with sort.Interface
+Go’s *sort.Sort* function assumes nothing about the representation of either
+the sequence or its elements.
+
+```go
+     package sort
+     type Interface interface {
+         Len() int
+         Less(i, j int) bool // i, j are indices of sequence elements
+         Swap(i, j int)
+}
+```
+
+```go
+     type StringSlice []string
+     func (p StringSlice) Len() int           { return len(p) }
+     func (p StringSlice) Less(i, j int) bool { return p[i] < p[j] }
+     func (p StringSlice) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
+     sort.Sort(StringSlice(names))
+     sort.Strings(names)                  # In-build function in sort
+```
+
+```go
+     package sort
+     type reverse struct{ Interface } // that is, sort.Interface
+     func (r reverse) Less(i, j int) bool { return r.Interface.Less(j, i) }
+     func Reverse(data Interface) Interface { return reverse{data} }
+```
+**Len** and **Swap**, the other two methods of **reverse**, are implicitly provided
+by the original *sort.Interface* value because it is an embedded field. The exported
+function *Reverse* returns an instance of the reverse type that contains the
+original *sort.Interface* value.
+
+##### 7.7 The http.Handler Interface
