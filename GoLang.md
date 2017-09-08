@@ -1009,16 +1009,16 @@ In Go, variables are always initialized to a well-defined value, and interfaces 
 The *zero value* for an interface has both its type and value components set to *nil*.
 
 |                   |   w               |              |                    |
-|-------------------|:------------------|:-------------|-------------------:|
+|-------------------|:------------------|--------------|------------------- |
 | Dynamic Type      |   nil             |              |                    |
 | Dynamic Value     |   nil             |              |                    |
 
                       A nil Interface Value
 
 |                   |   w               |              |                    |
-|-------------------|:------------------|:-------------|-------------------:|
+|-------------------|:------------------|--------------|--------------------|
 | Dynamic Type      |   *os.File        |              |  os.File           |
-| Dynamic Value     |                   |              |  fd int=1 (stdout) |
+| Dynamic Value     |   --------------> | ---------->  |  fd int=1 (stdout) |
 
                       An Interface value containing an *os.File pointer
 
