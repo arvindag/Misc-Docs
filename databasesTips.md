@@ -91,8 +91,7 @@ This adds a lot of overhead and increases the variation in latency. Furthermore,
 single node, it's more expensive to read from multiple partitions than from a single one due
 to the way rows are stored.
 
-Good doc on partition and clusters [datastax data modelling](https://www.datastax
-.com/dev/blog/basic-rules-of-cassandra-data-modeling)
+Good doc on partition and clusters [datastax data modelling](https://www.datastax.com/dev/blog/basic-rules-of-cassandra-data-modeling)
 
 Another good doc: [shermandigital data model](https://shermandigital.com/blog/designing-a-cassandra-data-model/)
 
@@ -106,4 +105,5 @@ CREATE TABLE test.metric (
 ```
 SELECT DISTINCT key FROM metrics WHERE token(key) >= ? AND token(key) < ?
 ```
-
+Compound keys include multiple columns in the primary key, but these additional columns do not necessarily affect the partition key. A partition key with multiple columns is known as a composite key and will be discussed later.
+Note that only the first column of the primary key above is considered the partition key; the rest of columns are clustering keys.
