@@ -95,6 +95,8 @@ Good doc on partition and clusters [datastax data modelling](https://www.datasta
 
 Another good doc: [shermandigital data model](https://shermandigital.com/blog/designing-a-cassandra-data-model/)
 
+Another good link: [datastax data keys](https://www.datastax.com/dev/blog/the-most-important-thing-to-know-in-cassandra-data-modeling-the-primary-key)
+
 ```
 CREATE TABLE test.metric (
     key text,
