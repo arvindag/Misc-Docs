@@ -107,3 +107,5 @@ SELECT DISTINCT key FROM metrics WHERE token(key) >= ? AND token(key) < ?
 ```
 Compound keys include multiple columns in the primary key, but these additional columns do not necessarily affect the partition key. A partition key with multiple columns is known as a composite key and will be discussed later.
 Note that only the first column of the primary key above is considered the partition key; the rest of columns are clustering keys.
+Clustering keys are responsible for sorting data within a partition. Each primary key column after the partition key is considered a clustering key.
+
