@@ -1106,3 +1106,403 @@ function *Reverse* returns an instance of the reverse type that contains the
 original *sort.Interface* value.
 
 ##### 7.7 The http.Handler Interface
+
+```go 
+    # net/http
+    package http
+     type Handler interface {
+         ServeHTTP(w ResponseWriter, r *Request)
+}
+     func ListenAndServe(address string, h Handler) error
+```
+The *ListenAndServe* function requires a server address, such as "localhost:8000", and an
+instance of the Handler interface to which all requests should be dispatched. It runs forever,
+or until the server fails (or fails to start) with an error, always non-nil, which it returns.
+
+net/http provides *ServeMux*, a request multiplexer, to simplify the association between URLs
+and handlers. A ServeMux aggregates a collection of http.Handlers into a single http.Handler.
+Again, we see that different types satisfying the same interface are *substitutable*: the web
+server can dispatch requests to any http.Handler, regardless of which concrete type is behind
+it.
+
+```go
+     func main() {
+         db := database{"shoes": 50, "socks": 5}
+         mux := http.NewServeMux()
+         mux.Handle("/list", http.HandlerFunc(db.list))
+         mux.Handle("/price", http.HandlerFunc(db.price))
+         log.Fatal(http.ListenAndServe("localhost:8000", mux))
+     }
+     type database map[string]dollars
+     func (db database) list(w http.ResponseWriter, req *http.Request) {
+         for item, price := range db {
+             fmt.Fprintf(w, "%s: %s\n", item, price)
+         }
+     }
+     func (db database) price(w http.ResponseWriter, req *http.Request) {
+         item := req.URL.Query().Get("item")
+         price, ok := db[item]
+         if !ok {
+            w.WriteHeader(http.StatusNotFound) // 404
+            fmt.Fprintf(w, "no such item: %q\n", item)
+            return
+         }
+        fmt.Fprintf(w, "%s\n", price)
+     }
+```
+
+The expression *http.HandlerFunc(db.list)* is a **conversion, not a function call**, since
+http.HandlerFunc is a type. It has the following definition:
+```go
+net/http
+    package http
+     type HandlerFunc func(w ResponseWriter, r *Request)
+     func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
+         f(w, r)
+    }
+```
+**HandlerFunc** demonstrates some unusual features of Go’s interface mechanism. It is a
+*function type* that has methods and *satisfies an interface, http.Handler*. The behavior of
+its *ServeHTTP* method is to call the underlying function. *HandlerFunc* is thus an adapter that
+lets a *function value satisfy an interface*, where the *function and the interface’s sole method
+have the same signature*. In effect, this trick lets a single type such as database satisfy
+the http.Handler interface several different ways: once through its list method, once through
+its price method, and so on.
+
+Another way to start the mux is:
+```go
+
+     func main() {
+         db := database{"shoes": 50, "socks": 5}
+         http.HandleFunc("/list", db.list)
+         http.HandleFunc("/price", db.price)
+         log.Fatal(http.ListenAndServe("localhost:8000", nil))
+     }
+```
+Finally, an important reminder: as we mentioned in Section 1.7, the web server invokes *each
+handler in a new goroutine*, so handlers must take precautions such as locking when accessing
+variables that other goroutines, including other requests to the same handler, may be accessing.
+
+##### 7.8 The error Interface
+```go
+    type error interface {
+         Error() string
+    }
+```
+```go
+     package errors
+     func New(text string) error { return &errorString{text} }
+     type errorString struct { text string }
+     func (e *errorString) Error() string { return e.text }
+```
+The underlying type of *errorString is a struct, not a string*, to protect its representation
+from inadvertent (or premeditated) updates. And the reason that the *pointer type
+\*errorString*, not errorString alone, satisfies the error interface is so that every call
+to New allocates a distinct error instance that is equal to no other. We would not want a
+distinguished error such as io.EOF to compare equal to one that merely happened to have the
+same message.
+```go
+     fmt.Println(errors.New("EOF") == errors.New("EOF")) // "false"
+```
+##### 7.9 Example: Expression Evaluator
+
+##### 7.10 Type Assertions
+A *type assertion* is an operation applied to an interface value. Syntactically, it looks
+like *x.(T)*, where x is an expression of an interface type and T is a type, called the 
+*‘‘asserted’’* type. A **type assertion checks that the dynamic type of its operand matches
+the asserted type**.
+
+There are two possibilities.
+
+First, if the asserted type T is a concrete type, then the type assertion checks whether
+*x’s dynamic type is identical to T*. If this check succeeds, the *result of the type
+assertion is x’s dynamic value, whose type is of course T*. In other words, **a type
+assertion to a concrete type extracts the concrete value from its operand**. If the
+check fails, then the operation panics.
+ 
+Second, if instead the asserted type T is an interface type, then the type assertion checks
+whether x’s dynamic type satisfies T. If this check succeeds, the dynamic value is not extracted;
+the result is still an interface value with the same type and value components, but the result
+has the interface type T. In other words, **a type assertion to an interface type changes the type
+of the expression, making a different (and usually larger) set of methods accessible, but it
+preserves the dynamic type and value components inside the interface value**.
+
+If the type assertion appears in an assignment in which two results are expected, such as the
+following declarations, the operation does not panic on failure but instead returns an additional
+second result, a boolean indicating success:
+```go
+     var w io.Writer = os.Stdout
+     f, ok := w.(*os.File)      // success:  ok, f == os.Stdout
+     b, ok := w.(*bytes.Buffer) // failure: !ok, b == nil
+```
+##### 7.11 Discriminating Errors with Type Assertions
+##### 7.12 Querying Behaviors with Interface Type Assertions
+The *io.Writer* interface tells us only one fact about the concrete type that w holds: that bytes may be
+written to it. If we look behind the curtains of the net/http package, we see that the dynamic type that
+w holds in this program also has a *WriteString* method that allows strings to be efficiently written to it,
+avoiding the need to allocate a temporary copy. (This may seem like a shot in the dark, but a number of
+important types that satisfy io.Writer also have a WriteString method, including *bytes.Buffer, *os.File
+and *bufio.Writer.)
+
+##### 7.13 Type Switches
+Interfaces are used in **two** distinct styles. In the *first style*, exemplified by io.Reader, io.Writer,
+fmt.Stringer, sort.Interface, http.Handler, and error, an interface’s methods express the similarities of
+the concrete types that satisfy the interface but hide the representation details and intrinsic operations
+of those concrete types. The emphasis is on the methods, not on the concrete types.
+
+The *second* style exploits the ability of an interface value to hold values of a variety of concrete types
+and *considers the interface to be the union of those types*. Type assertions are used to discriminate among
+these types dynamically and treat each case differently. In this style, the emphasis is on the concrete types
+that satisfy the interface, not on the interface’s methods (if indeed it has any), and there is no hiding of
+information. We’ll describe interfaces used this way as **discriminated unions**.
+
+In its simplest form, a *type switch* looks like an ordinary switch statement in which the operand
+is x.(type)—that’s literally the keyword type—and each case has one or more types. A type switch enables
+a multi-way branch based on the interface value’s dynamic type. The nil case matches if x == nil, and the
+default case matches if no other case does. A type switch for sqlQuote would have these cases:
+```go
+     switch x.(type) {
+     case nil:       // ...
+     case int, uint: // ...
+     case bool:      // ...
+     case string:    // ...
+     default:        // ...
+    }
+```
+As with an ordinary switch statement (§1.8), cases are considered in order and, when a match is found, the
+case’s body is executed. Case order becomes significant when one or more case types are interfaces, since then
+there is a possibility of two cases matching. The position of the default case relative to the others is immaterial. 
+*No fall through is allowed*.
+
+Since this is typical, the *type switch* statement has an extended form that binds the extracted value to a new 
+variable within each case:
+```go
+     switch x := x.(type) { /* ... */ }
+```
+Although the *type of x is interface{}*, we consider it a *discriminated union of int, uint, bool, string, and nil*.
+
+#### 8 Goroutines and Channels
+Go enables two styles of concurrent programming. This chapter presents *goroutines* and *channels*, which support
+*communicating sequential processes* or CSP, a model of concurrency in which *values are passed between independent
+activities (goroutines)* but variables are for the most part confined to a single activity. Chapter 9 covers some
+aspects of the more traditional model of *shared memory multithreading*, which will be familiar if you’ve used
+threads in other mainstream languages.
+
+##### 8.1 Goroutines
+In Go, each concurrently executing activity is called a *goroutine*.
+
+```go
+
+     func spinner(delay time.Duration) {
+         for {
+            for _, r := range `-\|/` {
+                fmt.Printf("\r%c", r) // \r means carriage return
+                time.Sleep(delay)
+            }
+         }
+     }
+```
+##### 8.2 Example: Consurrent Clock Server
+```go
+
+     func main() {
+         listener, err := net.Listen("tcp", "localhost:8000")
+         if err != nil {
+             log.Fatal(err)
+         }
+        for {
+            conn, err := listener.Accept()
+            if err != nil {
+                log.Print(err) // e.g., connection aborted
+                continue
+            }
+        }
+     }
+```
+The listener’s *Accept* method blocks until an incoming connection request is made, then returns a *net.Conn*
+object representing the connection.
+
+##### 8.4 Channels
+If *goroutines are the activities of a concurrent* Go program, *channels are the connections between* them.
+A channel is a communication mechanism that *lets one goroutine send values to another goroutine*. Each channel
+is a conduit for values of a particular type, called the channel’s element type. The type of a channel whose
+elements have type int is written chan int.
+
+To create a channel, we use the built-in make function:
+```go
+    ch := make(chan int) // ch has type 'chan int'
+```
+As with maps, a channel is a *reference* to the data structure created by make. When we copy a channel or pass
+one as an argument to a function, we are copying a reference, so caller and callee refer to the same data
+structure. As with other reference types, the zero value of a channel is nil.
+
+Two *channels of the same type may be compared using ==*. The comparison is true if both are references to the
+same channel data structure. A channel may also be compared to nil.
+
+A channel has two principal operations, *send and receive*, collectively known as communications.
+```go
+     ch <- x   // a send statement
+     x = <-ch  // a receive expression in an assignment statement
+     <-ch      // a receive statement; result is discarded
+     close(ch) // close the channel 
+```
+Channels support a *third operation, close*, which sets a flag indicating that no more values will ever be
+sent on this channel; subsequent attempts to send will panic. 
+
+A channel created with a simple call to make is called an *unbuffered channel*, but make accepts an optional
+second argument, an *integer called the channel’s capacity*. If the capacity is non-zero, make creates a
+buffered channel.
+
+```go
+     ch = make(chan int)    // unbuffered channel or synchronous channel
+     ch = make(chan int, 0) // unbuffered channel
+     ch = make(chan int, 3) // buffered channel with capacity 3
+```
+
+###### 8.4.1 Unbuffered Channels
+Messages sent over channels have *two important aspects*. Each message has a value, but sometimes the fact of
+communication and the moment at which it occurs are just as important. We call *messages events* when we wish to
+stress this aspect. When the event carries no additional information, that is, its sole purpose is
+synchronization, we’ll emphasize this by using a channel whose element type is *struct{}*, though it’s common
+to use a *channel of bool or int* for the same purpose.
+
+###### 8.4.2 Pipelines
+Channels can be used to connect goroutines together so that the output of one is the input to another. This is
+called a *pipeline*.
+
+If the sender knows that no further values will ever be sent on a channel, it is useful to communicate this
+fact to the receiver goroutines so that they can stop waiting. This is accomplished by closing the channel
+using the built-in close function.
+
+After the closed channel has been *drained*, that is, after the last sent element has been received, all
+subsequent receive operations will proceed without blocking but will yield a zero value.
+
+###### 8.4.3 Unidirectional Channel Types
+Go type system provides *unidirectional channel* types that expose only one or the other of the send and
+receive operations.
+```go
+    chan<- int   // a send-only channel of int
+    <-chan int   // a receive-only channel of int
+```
+
+###### 8.4.4 Buffered Channels
+A buffered channel has a queue of elements. The queue’s maximum size is determined when it is created,
+by the capacity argument to make.
+
+A send operation on a buffered channel inserts an element at the back of the queue, and a receive operation
+removes an element from the front. If the channel is full, the send operation blocks its goroutine until
+space is made available by another goroutine’s receive. Conversely, if the channel is empty, a receive
+operation blocks until a value is sent by another goroutine.
+
+Novices are sometimes tempted to use buffered channels within a single goroutine as a queue, lured by
+their pleasingly simple syntax, but this is a mistake. Channels are deeply connected to goroutine scheduling,
+and without another goroutine receiving from the channel, a sender—and perhaps the whole program risks
+becoming blocked forever. If all you need is a simple queue, make one using a slice.
+
+Unlike garbage variables, *leaked goroutines are not automatically collected*, so it is important to make
+sure that goroutines terminate themselves when no longer needed.
+
+##### Looping in Parallel
+This demands a special kind of counter, one that can be safely manipulated from multiple goroutines and
+that provides a way to wait until it becomes zero. This counter type is known as **sync.WaitGroup**,
+and the code below shows how to use it:
+```go
+    var wg sync.WaitGroup // number of working goroutines
+    wg.Add(1)
+    go func(f string) {
+        defer wg.Done()
+    }
+    wg.Wait()
+```
+Note the asymmetry in the *Add* and *Done* methods. *Add*, which increments the counter, must be called
+before the worker goroutine starts, not within it; otherwise we would not be sure that the 
+Add happens before the ‘‘closer’’ goroutine calls *Wait*. Also, Add takes a parameter, but Done does not;
+it’s equivalent to Add(-1). We use defer to ensure that the counter is decremented even in the error case.
+
+##### 8.6 Example: Concurrent Web Crawler
+If you open thousands of goroutines for each method it is never good.
+
+The program is *too* parallel. *Unbounded parallelism* is rarely a good idea since there is always a limiting
+factor in the system, such as the number of CPU cores for compute-bound workloads, the number of spindles
+and heads for local disk I/O operations, the bandwidth of the network for streaming downloads, or the serving
+capacity of a web service. The solution is to limit the number of parallel uses of the resource to match the
+level of parallelism that is available. A simple way to do that in our example is to ensure that no more than
+*n calls* to goroutines are active at once, where n is comfortably less than the file descriptor limit—20, say.
+This is analogous to the way a doorman at a crowded nightclub admits a guest only when some other guest leaves.
+
+We can limit parallelism using a buffered channel of capacity n to model a concurrency primitive called
+a *counting semaphore*.
+
+```go
+     // tokens is a counting semaphore used to
+     // enforce a limit of 20 concurrent requests.
+     var tokens = make(chan struct{}, 20)
+     func crawl(url string) []string {
+         fmt.Println(url)
+         tokens <- struct{}{} // acquire a token
+         list, err := links.Extract(url)
+         <-tokens // release the token
+    }
+```
+
+##### 8.7 Multiplexing with Select
+If we need to multiplex between different channels, we can use the *select* statement to do so.
+```go
+     select {
+     case <-ch1:
+         // drop from ch1 ...
+     case x := <-ch2:
+         // ...use x...
+     case ch3 <- y:
+         // send y on ch3 ...
+     default:
+ }
+```
+Each case specifies a *communication* (a send or receive operation on some channel) and an associated
+block of statements.
+
+A *select* waits until a communication for some case is ready to proceed. It then performs that communication
+and executes the case’s associated statements; the other communications do not happen. A select with no
+cases, select{}, waits forever.
+
+The select statement below waits until the first of two events arrives, either an abort event or the event
+indicating that 10 seconds have elapsed. If 10 seconds go by with no abort, the launch proceeds.
+```go
+     func main() {
+         // ...create abort channel...
+        fmt.Println("Commencing countdown.  Press return to abort.")
+        select {
+        case <-time.After(10 * time.Second):
+            // Do nothing.
+        case <-abort:
+            fmt.Println("Launch aborted!")
+            return
+        }
+        launch()
+    }
+```
+
+##### 8.9 Cancellation
+There is no way for one goroutine to terminate another directly, since that would leave all its shared variables
+in undefined states. In the rocket launch program (§8.7) we sent a single value on a channel named abort, which
+the countdown goroutine interpreted as a request to stop itself. But what if we need to cancel two goroutines,
+or an arbitrary number?
+
+First, we create a cancellation channel on which no values are ever sent, but whose closure indicates that it
+is time for the program to stop what it is doing. We also define a utility function, cancelled, that checks
+or polls the cancellation state at the instant it is called.
+
+```go
+     var done = make(chan struct{})
+     func cancelled() bool {
+         select {
+         case <-done:
+             return true
+         default:
+             return false
+         }
+     }
+```
+
+
+
