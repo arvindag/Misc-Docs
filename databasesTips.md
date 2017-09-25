@@ -50,9 +50,6 @@ http://kubernetes.io/docs/getting-started-guides/aws/ is good start for kubernet
 https://prakhar.me/docker-curriculum/ is a good starting document for docker and some examples using AWS and docker.
 https://blog.talpor.com/2015/01/docker-beginners-tutorial/ is also not bad. Some of the other good ones are http://blog.flux7.com/blogs/docker/docker-tutorial-series-part-1-an-introduction, etc.
 
-#### Cassandra
-When data is written to Cassandra, it is first written to a commit log, which ensures full data durability and safety. Data is also written to an in-memory structure called a memtable, which is eventually flushed to a disk structure called an sstable (sorted strings table).
-
 #### Kafka Vs RabbitMQ
 **RabbitMQ** is broker-centric, focused around delivery guarantees between producers and consumers.
 **Kafka** is producer-centric. preserving ordered delivery within a partition. If Kafka queue is full, then it
@@ -68,4 +65,49 @@ Kafka performance paper by Jay Krepps: https://engineering.linkedin.com/kafka/be
 
 Another good article; http://www.cloudhack.in/2016/02/29/apache-kafka-vs-rabbitmq/
 
+#### Cassandra
+When data is written to Cassandra, it is first written to a commit log, which ensures full data durability and safety. Data is also written to an in-memory structure called a memtable, which is eventually flushed to a disk structure called an sstable (sorted strings table).
+
+##### Cassandra tips
+Basic Goals:
+
+These are the two high-level goals for your data model:
+
+1. Spread data evenly around the cluster
+2. Minimize the number of partitions read
+
+###### Rule 1: Spread Data Evenly Around the Cluster
+You want every node in the cluster to have roughly the same amount of data. Cassandra makes this easy, but it's not
+a given. Rows are spread around the cluster based on a hash of the partition key, which is the first element of
+the PRIMARY KEY. So, the key to spreading data evenly is this: pick a good primary key. I'll explain how to do this in a bit.
+
+###### Rule 2: Minimize the Number of Partitions Read
+Partitions are groups of rows that share the same partition key. When you issue a read query, you want to read rows
+from as few partitions as possible.
+
+Why is this important? Each partition may reside on a different node. The coordinator will
+generally need to issue separate commands to separate nodes for each partition you request.
+This adds a lot of overhead and increases the variation in latency. Furthermore, even on a
+single node, it's more expensive to read from multiple partitions than from a single one due
+to the way rows are stored.
+
+Good doc on partition and clusters [datastax data modelling](https://www.datastax.com/dev/blog/basic-rules-of-cassandra-data-modeling)
+
+Another good doc: [shermandigital data model](https://shermandigital.com/blog/designing-a-cassandra-data-model/)
+
+Another good link: [datastax data keys](https://www.datastax.com/dev/blog/the-most-important-thing-to-know-in-cassandra-data-modeling-the-primary-key)
+
+```
+CREATE TABLE test.metric (
+    key text,
+    timestamp bigint,
+    value double,
+    PRIMARY KEY (key, timestamp) )
+``` 
+```
+SELECT DISTINCT key FROM metrics WHERE token(key) >= ? AND token(key) < ?
+```
+Compound keys include multiple columns in the primary key, but these additional columns do not necessarily affect the partition key. A partition key with multiple columns is known as a composite key and will be discussed later.
+Note that only the first column of the primary key above is considered the partition key; the rest of columns are clustering keys.
+Clustering keys are responsible for sorting data within a partition. Each primary key column after the partition key is considered a clustering key.
 
