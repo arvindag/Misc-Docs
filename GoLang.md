@@ -1,5 +1,5 @@
 #### 1 Tutorial
-##### 1.3 
+##### 1.3. 
 Printf has over a dozen such conversions, which Go programmers call verbs. This table is far
 from a complete specification but illustrates many of the features that are available:
 ```sh
@@ -24,30 +24,30 @@ example, the values inserted into the counts map by countLines are seen by main.
 A **goroutine** is a concurrent function execution. A **channel** is a communication mechanism
 that allows one goroutine to pass values of a specified type to another goroutine. The function
 main runs in a goroutine and the go statement creates additional goroutines.
-##### 1.7 A web server
+##### 1.7. A web server
 The server has two handlers, and the request URL determines which one is called: a request
 for /count invokes counter and all others invoke handler. A handler pattern that ends with
 a slash matches any URL that has the pattern as aprefix. Behind the scenes, the server runs
 the handler for each incoming request in a separate goroutine so that it can serve multiple
 requests simultaneously.
-##### 1.8 Loose Ends
+##### 1.8. Loose Ends
 Cases do not fall through from one to thenext as in C-like languages (though there is a rarely 
 used **fallthrough** statement that overrides this behavior).
 A switch does not need an operand; it can just list the cases, each of which is a boolean
 expression: This form is called a **tagless switch**; it’s equivalent to switch true.
 #### 2 Program Structure
-##### 2.2 Declerations
+##### 2.2. Declerations
 There are 4 major kinds of declarations: *var, const, type and func*.
-##### 2.3 Variables
+##### 2.3. Variables
 A *var* declaration creates a variable of a particular type, attached a name to it, and sets its
 initial value. Each declaration has the general form *var name type = expression*.
-###### 2.3.1 Short variable declaration
+###### 2.3.1. Short variable declaration
 *name := expression*
 Keep in mind that *:=* is a declaration and *=* is an assignment.
 A short variable declaration does not necessarily *declare* all the variables on its left hand side. If some
 of them were already declared in the same lexical block, then the short variable decleration acts like an
 *assignment* to those variables. A short variable declaration must declare at least one new variable.
-###### 2.3.2 Pointers
+###### 2.3.2. Pointers
 A variable is a piece of storage containing a value. A *pointer* is the address of a variable. Pointers
 are comparable; two pointers are equal iff they point to the same variable or they are both nil. it is perfectly
 safe for a function to return the address of a local variable.
@@ -66,14 +66,14 @@ var sep = flag.String("s", " ", "separator")
 The variables *sep* and *n* are pointers to the flag variables, which must be accessed indirectly as *\*sep*
 and *\*n*.
 
-###### 2.3.3 The new Function
+###### 2.3.3. The new Function
 Another way to create a variable is to use the built-in function *new*. The expression **new(T)** creates an
 *unnamed variable*  of type T, initializes it to zero values of T, and returns its address, which is a value
 of type *\*T*. Each call to new returns a distinct variable with a unique address.
 Since *new* is a predeclared function, and **not a keyword**, it is possible to **redefine** the name for
 something else within a function.
 
-###### 2.3.4 Lifetime of a variable
+###### 2.3.4. Lifetime of a variable
 The variable lives on until it becomes **unreachable**, at which point its storage might be recycled.
 ```go
 var global *int
@@ -92,7 +92,7 @@ Here, **x** must be **heap-allocated** because it is still reachable from the va
 **f** has returned, despite being declared as a local variable; we say **x** *escapes* from **f**.
 Conversely, when **g** returns, the variable **\*y** becomes unreachable and can be recycled.
 
-##### 2.5 Type Declarations
+##### 2.5. Type Declarations
 A **type** declaration defines a new *named type* that has the same *underlying type* as an existing type.
 The named type provides a way to separate different and perhaps incompatible uses of the underlying type 
 so that they cannot be mixed unintentionally.
@@ -113,7 +113,7 @@ In any case, a type conversions never fails at run time. Some special conversion
 Named types also make it possible to define new behaviors for the values of the type. These behaviors are expressed as a set
 of functions associated with the type, called the type's *methods*.
 
-###### 2.6.2 Package Initialization
+###### 2.6.2. Package Initialization
 If the package has multiple .go files, they are initialized in the order in which the files are given to the compiler.
 The go tool sorts the .go files by name before invoking the compiler.
 ```go
@@ -122,7 +122,7 @@ func init() { /* ... */ }
 Such **init()** functions can't be called or referenced, but otherwise they are normal functions. Within each file,
 **init** functions are automatically executed when the program starts, in the order in which they are declared.
 
-##### 2.7 Scope
+##### 2.7. Scope
 Don't confuse scope with lifetime. The scope of the declaration is a region of the program text; it is a compile time
 property. The lifetime of a variable is the range of time during execution when the variable can be referred to by other
 parts of the program. It is a run time property.
@@ -133,7 +133,7 @@ Go types fall into **4 categories**: *basic types, aggregate types, reference ty
 **Aggregate** types like arrays and structs
 **Reference** types includes pointers, slices, maps, functions, channels
 **Interface** types which are abstract types. The above 3 are concrete types.
-##### 3.1 Integers
+##### 3.1. Integers
 * *int* is by far the most used integer type which is signed integer.
 * *rune* is a synonym for **int32** and indicates a value is a Unicode code point.
 * Similarly *byte* is a synonym for uint8
@@ -141,7 +141,7 @@ Go types fall into **4 categories**: *basic types, aggregate types, reference ty
 Built-in **len** function returns a signed int so that it can be used in the loops.
 Octal numbers seem to be used for exactly one purpose - file permissions on the POSIX systems.
 
-###### 3.5.3 UTF-8
+###### 3.5.3. UTF-8
 * `0xxxxxxx                             runes 0-127    (ASCII)`
 * `110xxxxx 10xxxxxx                    128-2047`
 * `1110xxxx 10xxxxxx 10xxxxxx           2048-65535`
@@ -150,8 +150,9 @@ Octal numbers seem to be used for exactly one purpose - file permissions on the 
 If there are unicode string, then do not use the `len` of the string, but `utf8.RUneCountInString()`
 UTF-8 is exceptionally convinient as an interchange format, but within a program runes may be more convinient 
 because they are of uniform size and this easily indexes in arrays and slices.
+
 #### 4 Composite Types
-##### 4.1 Arrays
+##### 4.1. Arrays
 An **array** is a *fixed length* sequence of zero or more elements of a particular type. **Slices**, which can grow and 
 shrink, are much more versatile. In an array literal, if an ellipsis "..." appears in place of the length, the array
 length is determined by the number of initializers. ```q := [...]int{1, 2, 3}``` has 3 integers. The size of an array
@@ -163,7 +164,7 @@ When a function is called, a copy of each argument value is assigned to the corr
 the *function receives a copy, not the original*. Go treats arrays like any other type, but this behavior is
 *different* from other languages that implicitly pass *arrays by reference*.
 
-##### 4.2 Slices
+##### 4.2. Slices
 A slice is a lightweigth data structure that gives access to a subsequence (or perhaps all) of the elements of an
 array, which is known as the slice's underlying array. A slice has 3 components: a pointer, a length and a capacity.
 An array of the string for months of the year is ```months := [...]string{1: "January", /* ... */, 12: "December"}```
@@ -176,14 +177,14 @@ by braces, but the size is not given.
 ``` s := []int{1, 2, 3}``` is a slice.
 If you need to test whether a slice is empty, use *len(s) == 0* not *s == nil*.
 
-###### 4.2.1 The Append function
+###### 4.2.1. The Append function
 Usually we do not know whether a given call to built-in *append* will cause the reallocation, so we
  can't assume that the original slice refers to the resulting slice. Hence
  ``` runes = append(runes, r)```
  The ellipsis "..." in the declaration of the *appendInt* makes the function *variadic*. It accepts any number of 
  final arguments. ```func appendInt(x []int, y ...int) []int```
  
-##### 4.3 Maps
+##### 4.3. Maps
 It is an unordered collection of key/value pairs in which all the keys are distinct, and the value
 associated with a given key can be retreivedm updatedm or removed using a constant number of key
 comparisons on the average, no matter how large the hash table.
@@ -227,7 +228,7 @@ in a directed graph.
 
 ```go var graph = make(map[from]map[to]bool)```
 
-##### 4.4 Structs
+##### 4.4. Structs
 A *struct* is an aggregate data type that groups together zero or more named values of arbitrary types as
 a single entity. Each value is called a *field*. Field order is *significant* to the struct type identity.
 If the field order is changed, it is a new struct. A zero value for a struct is composed of the zero values
@@ -243,7 +244,7 @@ func Bonus(e *Employee, percent int) int {
 and this is required if the function must modify its argument, since in a call-by-value language like
 Go, the called function receives only a copy of an argument, not a reference to the original argument.
 
-###### 4.4.3 Struct Embedding and Anonymous Fields
+###### 4.4.3. Struct Embedding and Anonymous Fields
 Go lets us declare a field with a type but ni name; such fields are called *anonymous fields*. The type
 of the field must be a named type or a pointer to a named type. Below, Circle and Wheel have one
 anonymous field each with Wheel.
@@ -279,7 +280,7 @@ fields of the embedded type but its methods also. This mechanism is the main way
 behaviors are composed from simpler ones. *Composition* is central to object-oriented programming in Go.
 
 
-##### 4.5 JSON
+##### 4.5. JSON
 The basic JSON types are numbers (in decimal or scientific notation), booleans (true or false), and
 strings, which are sequences of Unicode code points enclosed in double quotes, with backslash escapes
 using a similar notation to Go, though JSON's *\Uhhhh* numeric escapes denote UTF-16 codes, *not runes*.
@@ -317,7 +318,7 @@ The inverse of *marshaling*, decoding JSON and populating a Go data structure is
 is done by *json.unmarshal*. If the Go data structure only has some of the fields from the marshalled version,
 then the other fields from the JSON are ignored.
 
-##### 4.6 Text and HTML Templates
+##### 4.6. Text and HTML Templates
 a *template* is a string or file containing one or more of portions enclosed in double braces,
 {{...}}, called *actions*. Within an action, the **|** notation makes the result of one operation the
 argument of another, analogous to a Unix shell pipeline.
@@ -333,7 +334,7 @@ Age:    {{.CreatedAt | daysAgo}} days
 ```
 
 #### 5 Functions
-##### 5.1 Function Declarations
+##### 5.1. Function Declarations
 ```go
 func name(paramater-list) (result-list) {
   body
@@ -355,7 +356,7 @@ package math
 func Sin(x float64) float64 // implemented in assembly language
 ```
 
-##### 5.2 Recursion
+##### 5.2. Recursion
 ```go
 package html
 
@@ -381,12 +382,12 @@ type Node struct {
 
 ```
 
-##### 5.3 Multiple Return Values
+##### 5.3. Multiple Return Values
 In a function with named results, the operands of a return statement may be omitted. This is
 called a *bare return*. In functions like this one, with many return statements and several
 results, bare returns can reduce code duplication, but rarely make the code easier to
 understand.
-##### 5.4 Errors
+##### 5.4. Errors
 Go’s approach sets it apart from many other languages in which failures are reported using 
 *exceptions*, not ordinary values. Although Go does have an exception mechanism of sorts, 
 as we will see in Section 5.9, it is used only for reporting truly unexpected errors that 
@@ -395,7 +396,7 @@ indicate a bug, not the routine errors that a robust program should be built to 
 Go programs use ordinary control-flow mechanisms like if and return to respond to errors.
 This style undeniably demands that more attention be paid to error-han- dling logic, but 
 that is precisely the point.
-###### 5.4.1 Error-Handling Strategies
+###### 5.4.1. Error-Handling Strategies
 There are 5 different ways to handle errors.
 
 **First**
@@ -436,7 +437,7 @@ In some cases, it’s sufficient just to log the error and then continue, perhap
 **Fifth**
 Finally, in rare cases we can safely ignore an error entirely like cleaning the tmp area.
 
-##### 5.5 Function Values
+##### 5.5. Function Values
 Functions are *first-class values* in Go: like other values, function values have types,
 and they may be assigned to variables or passed to or returned from functions. A function
 value may be called like any other function. For example:
@@ -457,7 +458,7 @@ The zero value of a function type is *nil*. Calling a nil function value causes 
 The Function values may be compared with *nil*, but they are not comparable, so they may
 not be compared against each other or used as keys in a map.
 
-##### 5.6 Anonymous Functions
+##### 5.6. Anonymous Functions
 Named functions can be declared only at the package level, but we can use a *function literal*
 to denote a function value within any expression. A function literal is written like a 
 function declaration, but without a name following the func keyword. It is an expression, 
@@ -495,7 +496,7 @@ function *squares*. These hidden variable references are why we classify functio
 types and why function values are not comparable. Function values like these are implemented 
 using a technique called *closures*, and Go programmers often use this term for function values.
 
-###### 5.6.1 Caveat: Capturing Iteration Variables
+###### 5.6.1. Caveat: Capturing Iteration Variables
 Consider a program that must create a set of directories and later remove them. We can use a 
 slice of function values to hold the clean-up operations. (For brevity, we have omitted all 
 error handling in this example.)
@@ -532,7 +533,7 @@ and consequently all calls to os.RemoveAll will attempt to remove the same direc
 
 The risk is not unique to range-based **for** loop.
 
-##### 5.7 Variadic Functions
+##### 5.7. Variadic Functions
 A *variadic function* is one that can be called with varying numbers of arguments. The most 
 familiar examples are fmt.Printf and its variants. 
 
@@ -562,7 +563,7 @@ variadic function is distinct from the type of a function with an ordinary slice
 
 The *interface{}* type means that this function can accept any values at all for its final arguments.
 
-##### 5.8 Deferred Function Calls
+##### 5.8. Deferred Function Calls
 a *defer* statement is an ordinary function or method call prefixed by the keyword defer. The 
 function and argument expressions are evaluated when the statement is executed, but the *actual 
 call is deferred* until the function that contains the defer statement has finished, whether 
@@ -635,7 +636,7 @@ that is called on each iteration.
      }
 ```
 
-##### 5.9 Panic
+##### 5.9. Panic
 Go’s type system catches many mistakes at compile time, but others, like an out-of-bounds array
 access or nil pointer dereference, require checks at run time. When the Go runtime detects these
 mistakes, it *panics*.
@@ -651,7 +652,7 @@ Readers familiar with exceptions in other languages may be surprised that **runt
 print information about functions that seem to have already been ‘‘unwound.’’ Go’s panic 
 mechanism runs the deferred functions *before* it unwinds the stack.
 
-##### 5.10 Recover
+##### 5.10. Recover
 If the built-in *recover* function is called *within a deferred function* and the function
 containing the defer statement is panicking, recover ends the current state of panic and
 returns the panic value. The function that was panicking does not continue where it left 
@@ -682,7 +683,7 @@ associated with a particular type. An object-oriented program is one that uses m
 express the properties and operations of each data structure so that clients need not access
 the object’s representation directly.
 
-##### 6.1 Method Declarations
+##### 6.1. Method Declarations
 A method is declared with a variant of the ordinary function declaration in which an extra
 parameter appears before the function name.
 ```go
@@ -725,7 +726,7 @@ using methods over ordinary functions: method names can be shorter. The benefit 
 for calls originating outside the package, since they can use the shorter name and omit the
 package name.
 
-##### 6.2 Methods with a Pointer Receiver
+##### 6.2. Methods with a Pointer Receiver
 Because calling a function makes a copy of each argument value, if a function needs to update
 a variable, or if an argument is so large that we wish to avoid copying it, we must pass the
 address of the variable using a pointer. The same goes for methods that need to update the
@@ -751,7 +752,7 @@ have unpredictable effects.
 
 In some cases, *nil* is allowed to be a valid Receiver Value.
 
-##### 6.3 Composing Types by Struct Embedding
+##### 6.3. Composing Types by Struct Embedding
 Consider the type ColoredPoint: gopl.io/ch6/coloredpoint
 ```go
      import "image/color"
@@ -813,7 +814,7 @@ single package-level variable, cache:
          return v
      }
 ```
-##### 6.4 Method Values and Expressions
+##### 6.4. Method Values and Expressions
 The selector *p.Distance* yields a *method value*, a function that binds a method (Point.Distance) to
 a specific receiver value p. This function can then be invoked without a receiver value; it needs only
 the non-receiver arguments.
@@ -839,13 +840,13 @@ Related to the method value is the *method expression*.
      fmt.Printf("%T\n", distance) // "func(Point, Point) float64"
 ```
 
-##### 6.5 Example: Bit Vector Type
+##### 6.5. Example: Bit Vector Type
 Sets in Go are usually implemented as a *map[T]bool*, where T is the element type. A set represented
 by a map is very flexible but, for certain problems, a specialized representation may outperform it.
 For example, in domains such as dataflow analysis where set elements are small non-negative integers,
 sets have many elements, and set operations like union and intersection are common, a *bit vector* is ideal.
 
-##### 6.6 Encapsulation
+##### 6.6. Encapsulation
 A variable or method of an object is said to be encapsulated if it is inaccessible to clients of
 the object. Encapsulation, sometimes called *information hiding*, is a key aspect of object-oriented
 programming.
@@ -872,7 +873,7 @@ clients from setting an object’s variables arbitrarily.
 #### 7 Interfaces
 Many object-oriented languages have some notion of interfaces, but what makes Go’s interfaces
 so distinctive is that they are *satisfied implicitly*.
-##### 7.1 Interfaces as Contracts
+##### 7.1. Interfaces as Contracts
 An interface as an *abstract type*. When you have a value of an interface type, you know nothing
 about what it is; you know only what it can do, or more precisely, what behaviors are provided by
 its methods.
@@ -891,7 +892,7 @@ package fmt
          String() string
     }
 ```
-##### 7.2 Interface Types
+##### 7.2. Interface Types
 An interface type specifies a set of methods that a concrete type must possess to be considered
 an instance of that interface.
 
@@ -918,7 +919,7 @@ The syntax used above, which resembles struct embedding, lets us name another in
 shorthand for writing out all of its methods. This is called *embedding an interface*. The order
 in which the methods appear is imma- terial. All that matters is the set of methods.
 
-##### 7.3 Interface Satisfaction
+##### 7.3. Interface Satisfaction
 A type *satisfies* an interface if it possesses all the methods the interface requires.
 For example, an \*os.Filesatisfiesio.Reader, Writer, Closer, and ReadWriter*. A \*bytes.Buffer 
 satisfies Reader, Writer, and ReadWriter, but does not satisfy Closer because it does not have
@@ -954,7 +955,7 @@ declaration of the concrete type. This is particularly useful when the concrete 
 package written by a different author. Of course, there do need to be underlying commonalities in
 the concrete types.
 
-##### 7.4 Parsing Flags with flag.Value
+##### 7.4. Parsing Flags with flag.Value
 We’ll see how another standard interface, *flag.Value*, helps us define new notations for
 command-line flags.
 ```go
@@ -982,7 +983,7 @@ The *String* method formats the flag’s value for use in command-line help mess
 the flag value. In effect, the *Set* method is the inverse of the String method, and it is good
 practice for them to use the same notation.
 
-##### 7.5 Interface Values
+##### 7.5. Interface Values
 Conceptually, a *value* of an *interface type*, or *interface value*, has two components,
 a *concrete type* and a *value of that type*. These are called the interface’s *dynamic type*
 and *dynamic value*.
@@ -1061,7 +1062,7 @@ However, if two interface values are compared and have the same dynamic type,
 but that type is not comparable (a slice, for instance), then the comparison
 fails with a panic.
 
-###### 7.5.1 Caveat: An Interface Containing a Nil Pointer Is Non-Nil
+###### 7.5.1. Caveat: An Interface Containing a Nil Pointer Is Non-Nil
 **A nil interface value, which contains no value at all, is not the same as
 an interface value containing a pointer that happens to be nil.**
 
@@ -1072,7 +1073,7 @@ an interface value containing a pointer that happens to be nil.**
 
                       A non-nil Interface containing a nil pointer
 
-##### 7.6 Sorting with sort.Interface
+##### 7.6. Sorting with sort.Interface
 Go’s *sort.Sort* function assumes nothing about the representation of either
 the sequence or its elements.
 
@@ -1105,7 +1106,7 @@ by the original *sort.Interface* value because it is an embedded field. The expo
 function *Reverse* returns an instance of the reverse type that contains the
 original *sort.Interface* value.
 
-##### 7.7 The http.Handler Interface
+##### 7.7. The http.Handler Interface
 
 ```go 
     # net/http
@@ -1183,7 +1184,7 @@ Finally, an important reminder: as we mentioned in Section 1.7, the web server i
 handler in a new goroutine*, so handlers must take precautions such as locking when accessing
 variables that other goroutines, including other requests to the same handler, may be accessing.
 
-##### 7.8 The error Interface
+##### 7.8. The error Interface
 ```go
     type error interface {
          Error() string
@@ -1204,9 +1205,9 @@ same message.
 ```go
      fmt.Println(errors.New("EOF") == errors.New("EOF")) // "false"
 ```
-##### 7.9 Example: Expression Evaluator
+##### 7.9. Example: Expression Evaluator
 
-##### 7.10 Type Assertions
+##### 7.10. Type Assertions
 A *type assertion* is an operation applied to an interface value. Syntactically, it looks
 like *x.(T)*, where x is an expression of an interface type and T is a type, called the 
 *‘‘asserted’’* type. A **type assertion checks that the dynamic type of its operand matches
@@ -1235,8 +1236,8 @@ second result, a boolean indicating success:
      f, ok := w.(*os.File)      // success:  ok, f == os.Stdout
      b, ok := w.(*bytes.Buffer) // failure: !ok, b == nil
 ```
-##### 7.11 Discriminating Errors with Type Assertions
-##### 7.12 Querying Behaviors with Interface Type Assertions
+##### 7.11. Discriminating Errors with Type Assertions
+##### 7.12. Querying Behaviors with Interface Type Assertions
 The *io.Writer* interface tells us only one fact about the concrete type that w holds: that bytes may be
 written to it. If we look behind the curtains of the net/http package, we see that the dynamic type that
 w holds in this program also has a *WriteString* method that allows strings to be efficiently written to it,
@@ -1244,7 +1245,7 @@ avoiding the need to allocate a temporary copy. (This may seem like a shot in th
 important types that satisfy io.Writer also have a WriteString method, including *bytes.Buffer, *os.File
 and *bufio.Writer.)
 
-##### 7.13 Type Switches
+##### 7.13. Type Switches
 Interfaces are used in **two** distinct styles. In the *first style*, exemplified by io.Reader, io.Writer,
 fmt.Stringer, sort.Interface, http.Handler, and error, an interface’s methods express the similarities of
 the concrete types that satisfy the interface but hide the representation details and intrinsic operations
@@ -1288,7 +1289,7 @@ activities (goroutines)* but variables are for the most part confined to a singl
 aspects of the more traditional model of *shared memory multithreading*, which will be familiar if you’ve used
 threads in other mainstream languages.
 
-##### 8.1 Goroutines
+##### 8.1. Goroutines
 In Go, each concurrently executing activity is called a *goroutine*.
 
 ```go
@@ -1302,7 +1303,7 @@ In Go, each concurrently executing activity is called a *goroutine*.
          }
      }
 ```
-##### 8.2 Example: Consurrent Clock Server
+##### 8.2. Example: Consurrent Clock Server
 ```go
 
      func main() {
@@ -1322,7 +1323,7 @@ In Go, each concurrently executing activity is called a *goroutine*.
 The listener’s *Accept* method blocks until an incoming connection request is made, then returns a *net.Conn*
 object representing the connection.
 
-##### 8.4 Channels
+##### 8.4. Channels
 If *goroutines are the activities of a concurrent* Go program, *channels are the connections between* them.
 A channel is a communication mechanism that *lets one goroutine send values to another goroutine*. Each channel
 is a conduit for values of a particular type, called the channel’s element type. The type of a channel whose
@@ -1359,14 +1360,14 @@ buffered channel.
      ch = make(chan int, 3) // buffered channel with capacity 3
 ```
 
-###### 8.4.1 Unbuffered Channels
+###### 8.4.1. Unbuffered Channels
 Messages sent over channels have *two important aspects*. Each message has a value, but sometimes the fact of
 communication and the moment at which it occurs are just as important. We call *messages events* when we wish to
 stress this aspect. When the event carries no additional information, that is, its sole purpose is
 synchronization, we’ll emphasize this by using a channel whose element type is *struct{}*, though it’s common
 to use a *channel of bool or int* for the same purpose.
 
-###### 8.4.2 Pipelines
+###### 8.4.2. Pipelines
 Channels can be used to connect goroutines together so that the output of one is the input to another. This is
 called a *pipeline*.
 
@@ -1377,7 +1378,7 @@ using the built-in close function.
 After the closed channel has been *drained*, that is, after the last sent element has been received, all
 subsequent receive operations will proceed without blocking but will yield a zero value.
 
-###### 8.4.3 Unidirectional Channel Types
+###### 8.4.3. Unidirectional Channel Types
 Go type system provides *unidirectional channel* types that expose only one or the other of the send and
 receive operations.
 ```go
@@ -1385,7 +1386,7 @@ receive operations.
     <-chan int   // a receive-only channel of int
 ```
 
-###### 8.4.4 Buffered Channels
+###### 8.4.4. Buffered Channels
 A buffered channel has a queue of elements. The queue’s maximum size is determined when it is created,
 by the capacity argument to make.
 
@@ -1402,7 +1403,7 @@ becoming blocked forever. If all you need is a simple queue, make one using a sl
 Unlike garbage variables, *leaked goroutines are not automatically collected*, so it is important to make
 sure that goroutines terminate themselves when no longer needed.
 
-##### Looping in Parallel
+##### 8.5. Looping in Parallel
 This demands a special kind of counter, one that can be safely manipulated from multiple goroutines and
 that provides a way to wait until it becomes zero. This counter type is known as **sync.WaitGroup**,
 and the code below shows how to use it:
@@ -1419,7 +1420,7 @@ before the worker goroutine starts, not within it; otherwise we would not be sur
 Add happens before the ‘‘closer’’ goroutine calls *Wait*. Also, Add takes a parameter, but Done does not;
 it’s equivalent to Add(-1). We use defer to ensure that the counter is decremented even in the error case.
 
-##### 8.6 Example: Concurrent Web Crawler
+##### 8.6. Example: Concurrent Web Crawler
 If you open thousands of goroutines for each method it is never good.
 
 The program is *too* parallel. *Unbounded parallelism* is rarely a good idea since there is always a limiting
@@ -1445,7 +1446,7 @@ a *counting semaphore*.
     }
 ```
 
-##### 8.7 Multiplexing with Select
+##### 8.7. Multiplexing with Select
 If we need to multiplex between different channels, we can use the *select* statement to do so.
 ```go
      select {
@@ -1482,7 +1483,7 @@ indicating that 10 seconds have elapsed. If 10 seconds go by with no abort, the 
     }
 ```
 
-##### 8.9 Cancellation
+##### 8.9. Cancellation
 There is no way for one goroutine to terminate another directly, since that would leave all its shared variables
 in undefined states. In the rocket launch program (§8.7) we sent a single value on a channel named abort, which
 the countdown goroutine interpreted as a request to stop itself. But what if we need to cancel two goroutines,
@@ -1504,5 +1505,101 @@ or polls the cancellation state at the instant it is called.
      }
 ```
 
+#### 9 Concurrency with Shared Variables
+##### 9.1. Race Conditions
+When we cannot confidently say that one event happens before the other, then the events x and y are *concurrent*.
+A type is concurrency-safe if all its accessible methods and operations are concurrency-safe.
 
+There are many reasons a function might not work when called concurrently, including deadlock, livelock,
+and resource starvation. We don’t have space to discuss all of them, so we’ll focus on the most important
+one, the *race condition*.
 
+A race condition is a situation in which the program does not give the correct result for some interleavings
+of the operations of multiple goroutines.
+
+This is because Alice’s deposit operation A1 is really a sequence of two operations, a read and a write;
+call them A1randA1w. Here’s the problematic interleaving:
+```
+Data race
+         0
+A1r      0  // ... = balance + amount
+B      100
+A1w    200  // balance = ...
+A2  "= 200"
+```
+This program contains a particular kind of race condition called a *data race*. A data race occurs whenever
+*two goroutines access the same variable concurrently* and *at least one of the accesses is a write*.
+
+It follows from this definition that there are *three ways to avoid a data race*.
+
+The **first way is not to write the variable**. We initialize the map with all necessary entries before
+creating additional goroutines and never modify it again, then any number of goroutines may safely call
+the variable concurrently since each only reads the value. Data structures that are never modified or are
+immutable are inherently concurrency-safe and need no synchronization.
+
+The **second way** to avoid a data race is to **avoid accessing the variable from multiple goroutines**.
+These variables are *confined* to a single goroutine. Since other goroutines cannot access the variable
+directly, they must use a channel to send the confining goroutine a request to query or update the
+variable.
+
+This is what is meant by the Go mantra ‘‘Do not communicate by sharing memory; instead, share memory by
+communicating.’’ A goroutine that brokers access to a confined variable using channel requests is called
+a *monitor goroutine* for that variable.
+
+The **third way** to avoid a data race is to allow many goroutines to access the variable, but only one
+at a time. This approach is known as **mutual exclusion**.
+
+##### 9.2. MutualExclusion:sync.Mutex
+A semaphore that counts only to 1 is called a *binary semaphore* or mutex. The *mutex guards the shared
+variables*. By convention, the variables guarded by a mutex are declared immediately after the declaration
+of the mutex itself.
+
+The region of **code between Lock and Unlock** in which a goroutine is free to read and modify the shared
+variables is called a *critical section*.
+
+A defer is marginally more expensive than an explicit call to Unlock, but not enough to justify less
+clear code. As always with concurrent programs, favor clarity and resist premature optimization. Where
+possible, use defer and let critical sections extend to the end of a function.
+
+There is a good reason Go’s mutexes are not re-entrant. The purpose of a mutex is to ensure that certain
+invariants of the shared variables are maintained at critical points during program execution. One of the
+invariants is ‘‘no goroutine is accessing the shared variables,’’ but there may be additional invariants
+specific to the data structures that the mutex guards. When a goroutine acquires a mutex lock, it may assume
+that the invariants hold. While it holds the lock, it may update the shared variables so that the invariants
+are temporarily violated. However, when it releases the lock, it must guarantee that order has been restored
+and the invariants hold once again. Although a re-entrant mutex would ensure that no other goroutines are
+accessing the shared variables, it cannot protect the additional invariants of those variables.
+
+When you use a mutex, make sure that both it and the variables it guards are not exported, whether they
+are package-level variables or the fields of a struct.
+
+##### 9.3. Read/WriteMutexes:sync.RWMutex
+We need a special kind of lock that allows read-only operations to proceed in parallel with each other, but write
+operations to have fully exclusive access. This lock is called a *multiple readers, single writer lock*, and in
+Go it’s provided by *sync.RWMutex*:
+```go
+     var mu sync.RWMutex
+     var balance int
+     func Balance() int {
+         mu.RLock() // readers lock
+         defer mu.RUnlock()
+         return balance
+}
+```
+*RLock and RUnlock* methods to acquire and release a *readers or shared lock*. Calls the *mu.Lock and mu.Unlock* 
+methods to acquire and release a *writer or exclusive lock*. An RWMutex requires more complex internal bookkeeping,
+making it slower than a regular mutex for uncontended locks.
+
+##### 9.4. Memory Synchronization
+In a modern computer there may be dozens of processors, each with its own local cache of the main memory. For
+efficiency, writes to memory are buffered within each processor and flushed out to main memory only when necessary.
+They may even be committed to main memory in a different order than they were written by the writing goroutine.
+Synchronization primitives like channel communications and mutex operations cause the processor to flush out
+and commit all its accumulated writes so that the effects of goroutine execution up to that point are guaranteed
+to be visible to goroutines running on other processors.
+
+Within a single goroutine, the effects of each statement are guaranteed to occur in the order of execution;
+goroutines are sequentially consistent. But in the absence of explicit synchronization using a channel or mutex,
+there is no guarantee that events are seen in the same order by all goroutines.
+
+##### 9.5. LazyInitialization:sync.Once
