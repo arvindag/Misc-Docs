@@ -1603,3 +1603,192 @@ goroutines are sequentially consistent. But in the absence of explicit synchroni
 there is no guarantee that events are seen in the same order by all goroutines.
 
 ##### 9.5. LazyInitialization:sync.Once
+It is good practice to defer an expensive initialization step until the moment it is needed. Initializing a
+variable up front increases the start-up latency of a program and is unnecessary if execution doesn’t always
+reach the part of the program that uses that variable. Initializing at the time of first use or call is called
+lazy initialization. One can use mutux to sync and performa the lazy initialization. But better is to use
+*Sync.Once.Do()* for this.
+
+A **Sync.Once** consists of a mutex and a boolean variable that records whether initialization has taken place;
+the mutex guards both the boolean and the client’s data structures. The sole method, Do, accepts the initialization
+function as its argument.
+```go
+     var loadIconsOnce sync.Once
+     var icons map[string]image.Image
+     // Concurrency-safe.
+     func Icon(name string) image.Image {
+         loadIconsOnce.Do(loadIcons)
+         return icons[name]
+}
+```
+In the first call, in which the variable is false, Do calls loadIcons and sets the variable to true. Subsequent
+calls do nothing, but the mutex synchronization ensures that the effects of loadIcons on memory (specifically,
+icons) become visible to all goroutines. Using sync.Once in this way, we can avoid sharing variables with other
+goroutines until they have been properly constructed.
+
+##### 9.6. The Race Detector
+Just add the *-race* flag to your gobuild, go run or go test command.
+
+The race detector studies this stream of events, looking for cases in which one goroutine reads or writes a shared
+variable that was most recently written by a different goroutine without an intervening synchronization operation.
+This indicates a concurrent access to the shared vari- able, and thus a data race. The tool prints a report that
+includes the identity of the variable, and the stacks of active function calls in the reading goroutine and the
+writing goroutine. This is usually sufficient to pinpoint the problem.
+
+##### 9.8. Goroutines and Threads
+There are a few differences between the green goroutines and OS threads.
+###### 9.8.1. Growable Stacks
+
+Each OS thread has a fixed-size block of memory (often as large as 2MB) for its stack, the work area where it
+saves the local variables of function calls that are in progress or temporarily suspended while another function
+is called. This fixed-size stack is simultaneously too much and too little.
+
+In contrast, a goroutine starts life with a small stack, typically 2KB. A goroutine’s stack, like the stack of an
+OS thread, holds the local variables of active and suspended function calls, but unlike an OS thread, a goroutine’s
+stack is not fixed; it grows and shrinks as needed. The size limit for a goroutine stack may be as much as 1GB.
+
+###### 9.8.3 Goroutine Scheduling
+OS threads are scheduled by the OS kernel. Every few milliseconds, a hardware timer inter- rupts the processor,
+which causes a kernel function called the scheduler to be invoked. This function suspends the currently executing
+thread and saves its registers in memory, looks over the list of threads and decides which one should run next,
+restores that thread’s registers from memory, then resumes the execution of that thread. Because OS threads are
+scheduled by the kernel, passing control from one thread to another requires a full context switch, that is,
+saving the state of one user thread to memory, restoring the state of another, and updating the scheduler’s data
+structures. This operation is slow, due to its poor locality and the number of memory accesses required, and has
+historically only gotten worse as the number of CPU cycles required to access memory has increased.
+
+The Go runtime contains its own scheduler that uses a technique known as m:n scheduling, because it multiplexes
+(or schedules) m goroutines on n OS threads.
+
+Unlike the operating system’s thread scheduler, the Go scheduler is not invoked periodically by a hardware timer,
+but implicitly by certain Go language constructs. For example, when a goroutine calls time.Sleep or blocks in a
+channel or mutex operation, the scheduler puts it to sleep and runs another goroutine until it is time to wake
+the first one up.
+
+
+###### 9.8.3. GOMAXPROCS
+The Go scheduler uses a parameter called GOMAXPROCS to determine how many OS threads may be actively executing Go
+code simultaneously. Its default value is the number of CPUs on the machine, so on a machine with 8 CPUs, the
+scheduler will schedule Go code on up to 8 OS threads at once. (GOMAXPROCS is the n in m:n scheduling.)
+
+You can explicitly control this parameter using the *GOMAXPROCS environment variable* or the *runtime.GOMAXPROCS* function.
+
+###### 9.8.4. Goroutines Have No Identity
+Goroutines have no notion of identity that is accessible to the programmer. This is by design, since thread-local
+storage tends to be abused.
+
+#### 10. Packages and the Go Tool
+##### 10.1. Introduction
+Packages also provide *encapsulation* by controlling which names are visible or exported outside the package.
+Restricting the visibility of package members hides the helper functions and types behind the package’s API,
+allowing the package maintainer to change the implemen- tation with confidence that no code outside the package
+will be affected. Restricting visibility also hides variables so that clients can access and update them only
+through exported functions that preserve internal invariants or enforce mutual exclusion in a concurrent program.
+
+Go *compilation is notably faster* than most other compiled languages, even when building from scratch.
+There are *three main reasons for the compiler’s speed*. **First**, all imports must be explicitly listed at the
+beginning of each source file, so the compiler does not have to read and process an entire file to determine its
+dependencies. **Second**, the dependencies of a package form a directed acyclic graph, and because there are no
+cycles, packages can be compiled separately and perhaps in parallel. **Finally**, the object file for a compiled
+Go package records export information not just for the package itself, but for its dependencies too. When
+compiling a package, the compiler must read one object file for each import but need not look beyond these files.
+
+##### 10.5. Blank Imports
+It is an error to import a package into a file but not refer to the name it defines within that file. However,
+on occasion we must import a package merely for the side effects of doing so: *evaluation of the initializer*
+expressions of its package-level variables and *execution of its init functions*.
+
+```go
+package main
+
+import "fmt"
+
+var WhatIsThe = AnswerToLife()
+
+func AnswerToLife() int {
+	return 43
+}
+
+func init() {
+	WhatIsThe = 0
+}
+
+func main() {
+	if WhatIsThe == 0 {
+		fmt.Println("It's all a lie.")
+	}
+}
+```
+*AnswerToLife()* is guaranteed to run before *init()* is called, and *init()* is guaranteed to run before *main()* is called.
+Keep in mind that init() is always called, regardless if there's main or not, so if you import a package that has an
+init function, it will be executed.
+Also, keep in mind that you can have multiple init() functions per package, they will be executed in the order they
+show up in the code (after all variables are initialized of course).
+
+##### 10.7. The Go Tool
+The go tool combines package manager (analogous to apt or rpm), build system and  test driver.
+
+###### 10.7.1. Workspace Organization
+The only configuration most users ever need is the **GOPATH environment variable**, which specifies the root of the workspace.
+GOPATH has three subdirectories: src, pkg and bin.
+
+The **go env** command prints the effective values of the environment variables relevant to the toolchain, including
+the default values for the missing ones.
+
+###### 10.7.2. Downloading Packages
+```go get ...``` If you specify the **-u** flag, go get will ensure that all packages it visits, including dependencies,
+are updated to their latest version before being built and installed.
+
+###### 10.7.3. Building Packages
+The **go build** command builds the requested package and all its dependencies, then throws away all the compiled code
+except the final executable, if any.
+
+The **go install** command is very similar to go build, except that it saves the compiled code for each package and
+command instead of throwing it away.
+
+###### 10.7.4. Documenting Packages
+```godoc -http :8000```
+Its **-analysis=type** and **-analysis=pointer** flags augment the documentation and the source code with the
+results of advanced static analysis.
+
+#### 11. Testing
+##### 11.1. The go test Tool
+```go test```. A *test function*, which is a function whose name begins with *Test*, exercises some program logic
+for correct behavior; go test calls the test function and reports the result, which is either PASS or FAIL. A
+*benchmark function* has a name beginning with *Benchmark* and measures the performance of some operation; go
+test reports the mean execution time of the operation. And an *example function*, whose name starts with *Example*,
+provides machine-checked documentation.
+
+##### 11.2. Test Functions
+```go test -v -run="French|Canal"```
+##### 11.3. Coverage
+```go test -v -run=Coverage ./...``` and ```go tool cover```. ```go test -cover``` will give more details about coverage.
+
+##### 11.4. Benchmark Functions
+Benchmark prefix and a ```*testing.B``` parameter. ```go test -bench=.``` will run all the benchmark tests. The 
+benchmark tests are not run by default.
+
+The -benchmem command-line flag will include memory allocation statistics in its report. 
+```go test -bench=. -benchmem```
+
+##### 11.6. Example Functions
+The third kind of function treated specially by go test is an example function, one whose name starts with Example.
+It has neither parameters nor results.
+
+Example functions serve **three** purposes. The *primary* one is documentation: a good example can be a more succinct
+or intuitive way to convey the behavior of a library function than its prose description.
+The *second* purpose is that examples are executable tests run by go test.
+The *third* purpose of an example is hands-on experimentation. The godoc server at golang.org uses the Go Playground
+to let the user edit and run each example function from within a web browser
+
+#### 12. Reflection
+Go provides a mechanism to update variables and inspect their values at run time, to call their methods, and to apply
+the operations intrinsic to their representation, all without knowing their types at compile time. This mechanism is
+called *reflection*. Reflection also lets us treat types themselves as first-class values.
+
+
+
+
+
+#### Misc docs:
+https://dzone.com/articles/so-you-wanna-go-fast is a good site.
