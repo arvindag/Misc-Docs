@@ -1987,11 +1987,87 @@ consider a nil map equal to a non-nil empty map, nor a nil slice equal to a non-
 ```
 
 ##### 13.4. Calling C Code with cgo
+**cgo**, a tool that creates Go bindings for C functions. Such tools are called foreign-function
+interfaces (FFIs), and cgo is not the only one for Go programs. **SWIG** (swig.org) is another; it
+provides more complex features for integrating with C++ classes. It’s when you need to use a complex,
+performance-critical library with a narrow C API that it may make sense to wrap it using cgo.
 
+```cgo
+     #include <bzlib.h>
+     int bz2compress(bz_stream *s, int action,
+                     char *in, unsigned *inlen, char *out, unsigned *outlen) {
+       s->next_in = in;
+       s->avail_in = *inlen;
+       s->next_out = out;
+       s->avail_out = *outlen;
+       int r = BZ2_bzCompress(s, action);
+       *inlen -= s->avail_in;
+       *outlen -= s->avail_out;
+       return r; 
+      }
+```
+```go
+     // Package bzip provides a writer that uses bzip2 compression (bzip.org).
+     package bzip
+     /*
+     #cgo CFLAGS: -I/usr/include
+     #cgo LDFLAGS: -L/usr/lib -lbz2
+     #include <bzlib.h>
+     int bz2compress(bz_stream *s, int action,
+     */
+     import "C"
+
+     import ( "io"
+     "unsafe"
+     )
+     type writer struct {
+         w      io.Writer // underlying output stream
+         stream *C.bz_stream
+         outbuf [64 * 1024]byte
+     }
+     // NewWriter returns a writer for bzip2-compressed streams.
+     func NewWriter(out io.Writer) io.WriteCloser {
+     }
+     const (
+         blockSize  = 9
+         verbosity  = 0
+         workFactor = 30
+     )
+     w := &writer{w: out, stream: new(C.bz_stream)}
+     C.BZ2_bzCompressInit(w.stream, blockSize, verbosity, workFactor)
+     return w
+```
+During preprocessing, cgo generates a temporary package that contains Go declarations cor- responding
+to all the C functions and types used by the file, such as C.bz_stream and C.BZ2_bzCompressInit. The
+cgo tool discovers these types by invoking the C compiler in a special way on the contents of the
+comment that precedes the import declaration.
+
+The comment may also contain #cgo directives that specify extra options to the C toolchain. The CFLAGS
+and LDFLAGS values contribute extra arguments to the compiler and linker commands so that they can
+locate the bzlib.h header file and the libbz2.a archive library.
+
+```go
+     func (w *writer) Write(data []byte) (int, error) {
+         if w.stream == nil {
+             panic("closed")
+         }
+         var total int // uncompressed bytes written
+         for len(data) > 0 {
+             inlen, outlen := C.uint(len(data)), C.uint(cap(w.outbuf))
+             C.bz2compress(w.stream, C.BZ_RUN,
+                 (*C.char)(unsafe.Pointer(&data[0])), &inlen,
+                 (*C.char)(unsafe.Pointer(&w.outbuf)), &outlen)
+             total += int(inlen)
+             data = data[inlen:]
+             if _, err := w.w.Write(w.outbuf[:outlen]); err != nil {
+                 return total, err
+         } }
+         return total, nil
+     }
+```
 
 #### Misc docs:
 https://dzone.com/articles/so-you-wanna-go-fast is a good site.
-
 
 **In Go Array works differently than it works in C:**
 1. Arrays are values, assigning one array to another copies all the elements
