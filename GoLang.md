@@ -1787,8 +1787,213 @@ the operations intrinsic to their representation, all without knowing their type
 called *reflection*. Reflection also lets us treat types themselves as first-class values.
 
 
+##### 12.2. reflect.Type and reflect.Value
+Reflection is provided by the **reflect** package. It defines two important types, *Type* and *Value*.
+A Type represents a Go type. The sole implementation of *reflect.Type* is the type descriptor (§7.5),
+the same entity that identifies the *dynamic type* of an interface value.
 
+The *reflect.TypeOf* function accepts any interface{} and returns its dynamic type as a reflect.Type.
+```go
+     t := reflect.TypeOf(3)  // a reflect.Type
+     fmt.Println(t.String()) // "int"
+     fmt.Println(t)          // "int"
+```
+The *TypeOf(3)* call above assigns the value 3 to the *interface{}* parameter. Recall from Section 7.5
+that an assignment from a concrete value to an interface type performs an *implicit interface conversion*,
+which creates an interface value consisting of *two components*: its *dynamic type* is the operand’s type
+(int) and its *dynamic value* is the operand’s value (3).
+
+Because *reflect.TypeOf* returns an *interface value’s dynamic type*, it always returns a *concrete type*.
+
+The other important type in the reflect package is *Value*. A *reflect.Value* can hold a value of any type.
+The reflect.ValueOf function accepts any interface{} and returns a reflect.Value containing the *interface’s
+dynamic value*. As with reflect.TypeOf, the results of reflect.ValueOf are *always concrete*.
+
+```go
+     v := reflect.ValueOf(3) // a reflect.Value
+     fmt.Println(v)          // "3"
+     fmt.Printf("%v\n", v)   // "3"
+     fmt.Println(v.String()) // NOTE: "<int Value>"
+```
+We use *reflect.Value’s Kind* method to discriminate the cases. Although there are infinitely many types,
+there are only a *finite number of kinds of type*: the basic types Bool, String, and all the numbers; the
+aggregate types Array and Struct; the reference types Chan, Func, Ptr, Slice, and Map; Interface types;
+and finally Invalid, meaning no value at all. (The zero value of a reflect.Value has kind Invalid.)
+
+```go
+     // Any formats any value as a string.
+     func Any(value interface{}) string {
+         return formatAtom(reflect.ValueOf(value))
+    }
+     // formatAtom formats a value without inspecting its internal structure.
+     func formatAtom(v reflect.Value) string {
+         switch v.Kind() {
+         case reflect.Invalid:
+             return "invalid"
+         case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+             return strconv.FormatInt(v.Int(), 10)
+         case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
+             return strconv.FormatUint(v.Uint(), 10)
+         // ...floating-point and complex cases omitted for brevity...
+         case reflect.Bool:
+             return strconv.FormatBool(v.Bool())
+         case reflect.String:
+             return strconv.Quote(v.String())
+         case reflect.Chan, reflect.Func, reflect.Ptr, reflect.Slice, reflect.Map:
+             return v.Type().String() + " 0x" +
+                 strconv.FormatUint(uint64(v.Pointer()), 16)
+         default: // reflect.Array, reflect.Struct, reflect.Interface
+             return v.Type().String() + " value"
+        }
+    }
+```
+
+```go
+    v.Kind()
+    v.Int()
+    v.Uint(),
+    v.Bool()
+    v.String()
+    v.Pointer()
+    v.Type().String()
+    v.Len(), v.Index()            // for slice and arrays
+    v = reflect.Valueof(m).Elem() // for Struct
+    v.NumField(), v.Field(i)      // for Struct
+    v.Type().Field(i).Name        // for Struct
+    Name, Type, Tag, Offet, Index // part of reflect.StructField
+    v.MapKeys(), v.MapIndex(key)  // for Map
+    v.IsNil()
+    v.Elem(), v.Elem().Type()     // for Pointer and Interface{}
+    reflect.ValueOf(x).CanAddr() and CanSet()
+    v.NumMethod() and v.Method(i).Type(), v.MethodByName()
+    v.Type().Method(i).Name, v.Type().Method(i).Type, v.Type().Method(i).Func 
+```
+
+##### 12.7. Accessing Struct Field Tags
+```go
+        var data struct {
+             Labels     []string `http:"l"`
+             MaxResults int      `http:"max"`
+             Exact      bool     `http:"x"`
+        }
+      // Build map of fields keyed by effective name.
+      fields := make(map[string]reflect.Value)
+      v := reflect.ValueOf(ptr).Elem() // the struct variable
+      for i := 0; i < v.NumField(); i++ {
+        fieldInfo := v.Type().Field(i) // a reflect.StructField
+        tag := fieldInfo.Tag           // a reflect.StructTag
+        name := tag.Get("http")
+        // or s, ok := fieldInfo.Tag.Lookup("http") // better that Get()
+        if name == "" {
+            name = strings.ToLower(fieldInfo.Name)
+        }
+        fields[name] = v.Field(i)
+      }
+```
+
+#### 13. Low-Level Programming
+Package unsafe is used extensively within low-level packages like *runtime, os, syscall, and net* that
+interact with the operating system.
+
+##### 13.1. unsafe.Sizeof, Alignof, and Offsetof
+The **unsafe.Sizeof** function reports the size in bytes of the representation of its operand, which may
+be an expression of any type; the expression is not evaluated. A call to Sizeof is a constant expression
+of type *uintptr*.
+```go
+    import "unsafe"
+    fmt.Println(unsafe.Sizeof(float64(0))) // "8"
+```
+**Sizeof** reports *only the size of the fixed part of each data structure*, like the pointer and length
+of a string, but not indirect parts like the contents of the string.
+
+```go
+Type                             Size
+bool                             1 byte
+intN, uintN, floatN, complexN    N / 8 bytes (for example, float64 is 8 bytes)
+int, uint, uintptr               1 word
+*T                               1 word
+string                           2 words (data, len)
+[]T                              3 worda (data, len, cap)
+map                              1 word
+func                             1 word
+chan                             1 word
+interface                        2 words (type, value)
+```
+The language specification does not guarantee that the order in which fields are declared is the
+order in which they are laid out in memory, so in theory a compiler is free to rearrange them,
+although as we write this, none do.
+
+The **unsafe.Alignof** function reports the required alignment of its argument’s type. It may be
+applied to an expression of any type, and it yields a constant.
+
+The **unsafe.Offsetof** function, whose operand must be a field selector x.f, computes the
+offset of field f relative to the start of its enclosing struct x, accounting for holes, if any.
+
+##### 13.2. unsafe.Pointer
+
+An ordinary *T pointer may be converted to an unsafe.Pointer, and an unsafe.Pointer may be
+converted back to an ordinary pointer, not necessarily of the same type *T. By converting a
+*float64 pointer to a *uint64, for instance, we can inspect the bit pattern of a
+floating-point variable:
+```go
+    package math
+    func Float64bits(f float64) uint64 { return *(*uint64)(unsafe.Pointer(&f)) }
+    fmt.Printf("%#016x\n", Float64bits(1.0)) // "0x3ff0000000000000"
+```
+```go
+     var x struct {
+         a bool
+         b int16
+         c []int
+     }
+     // equivalent to pb := &x.b
+     pb := (*int16)(unsafe.Pointer(
+         uintptr(unsafe.Pointer(&x)) + unsafe.Offsetof(x.b)))
+     *pb = 42
+     fmt.Println(x.b) // "42"
+  
+  
+     // NOTE: subtly incorrect!
+     tmp := uintptr(unsafe.Pointer(&x)) + unsafe.Offsetof(x.b)
+     pb := (*int16)(unsafe.Pointer(tmp))
+     *pb = 42
+```
+Some garbage collectors move variables around in memory to reduce fragmentation or bookkeeping.
+Garbage collectors of this kind are known as moving GCs.
+
+**uintptr** is an unsigned integer wide enough to represent an address. a uintptr is just a
+number so its value must not change.
+
+##### 13.3. Example: Deep Equivalence
+The **DeepEqual** function from the reflect package reports whether two values are ‘‘deeply’’ equal.
+DeepEqual compares basic values as if by the built-in == operator; for composite values, it
+traverses them recursively, comparing corresponding elements. Because it works for any pair of
+values, even ones that are not comparable with ==, it finds widespread use in tests. The following
+test uses DeepEqual to compare two []string values:
+```go
+    func TestSplit(t *testing.T) {
+         got := strings.Split("a:b:c", ":")
+         want := []string{"a", "b", "c"};
+         if !reflect.DeepEqual(got, want) { /* ... */ }
+    }
+```
+Although DeepEqual is convenient, its distinctions can seem arbitrary. For example, it doesn’t
+consider a nil map equal to a non-nil empty map, nor a nil slice equal to a non-nil empty one:
+```go
+     var a, b []string = nil, []string{}
+     fmt.Println(reflect.DeepEqual(a, b)) // "false"
+     var c, d map[string]int = nil, make(map[string]int)
+     fmt.Println(reflect.DeepEqual(c, d)) // "false"
+```
+
+##### 13.4. Calling C Code with cgo
 
 
 #### Misc docs:
 https://dzone.com/articles/so-you-wanna-go-fast is a good site.
+
+
+**In Go Array works differently than it works in C:**
+1. Arrays are values, assigning one array to another copies all the elements
+2. If you pass an array to a function, it will receive a copy of the array, not a pointer to it
+3. The size of an array is part of its type. The types [10] int and [20] int are distinct
