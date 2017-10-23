@@ -31,7 +31,7 @@ a slash matches any URL that has the pattern as aprefix. Behind the scenes, the 
 the handler for each incoming request in a separate goroutine so that it can serve multiple
 requests simultaneously.
 ##### 1.8. Loose Ends
-Cases do not fall through from one to thenext as in C-like languages (though there is a rarely 
+Cases do not fall through from one to the next as in C-like languages (though there is a rarely 
 used **fallthrough** statement that overrides this behavior).
 A switch does not need an operand; it can just list the cases, each of which is a boolean
 expression: This form is called a **tagless switch**; it’s equivalent to switch true.
@@ -49,8 +49,8 @@ of them were already declared in the same lexical block, then the short variable
 *assignment* to those variables. A short variable declaration must declare at least one new variable.
 ###### 2.3.2. Pointers
 A variable is a piece of storage containing a value. A *pointer* is the address of a variable. Pointers
-are comparable; two pointers are equal iff they point to the same variable or they are both nil. it is perfectly
-safe for a function to return the address of a local variable.
+are comparable; two pointers are equal iff they point to the same variable or they are both nil. It is
+perfectly safe for a function to return the address of a local variable.
 ```go
 v := 1
 p := &v
@@ -109,7 +109,7 @@ stops inadvertent errors. An explicit type *conversion* like **Celsius(t)** or *
 a float64. **Celsius(t)** and **Fahrenheit(t)** are conversions, not function calls.
 A conversion from one type to another is allowed if both have the same underlying type, or if both are unnamed pointer types
 that point to variables of the same underlying type. These conversions change the type but not the representation of the value.
-In any case, a type conversions never fails at run time. Some special conversions might changed the representation of of the value like float64 to int conversion or string to []byte slice conversions.
+In any case, a type conversions never fails at run time. Some special conversions might change the representation of the value like float64 to int conversion or string to []byte slice conversions.
 Named types also make it possible to define new behaviors for the values of the type. These behaviors are expressed as a set
 of functions associated with the type, called the type's *methods*.
 
@@ -131,7 +131,7 @@ parts of the program. It is a run time property.
 Go types fall into **4 categories**: *basic types, aggregate types, reference types and interface types*.
 **Basic** types like numbers, strings, booleans
 **Aggregate** types like arrays and structs
-**Reference** types includes pointers, slices, maps, functions, channels
+**Reference** types includes pointers, slices, maps, functions and channels.
 **Interface** types which are abstract types. The above 3 are concrete types.
 ##### 3.1. Integers
 * *int* is by far the most used integer type which is signed integer.
@@ -147,9 +147,13 @@ Octal numbers seem to be used for exactly one purpose - file permissions on the 
 * `1110xxxx 10xxxxxx 10xxxxxx           2048-65535`
 * `11110xxx 10xxxxxx 10xxxxxx 10xxxxxx  65536 - 0x10ffff`
 
-If there are unicode string, then do not use the `len` of the string, but `utf8.RUneCountInString()`
+If there are unicode string, then do not use the `len` of the string, but `utf8.RuneCountInString()`
 UTF-8 is exceptionally convinient as an interchange format, but within a program runes may be more convinient 
 because they are of uniform size and this easily indexes in arrays and slices.
+
+###### 3.5.4. Strings and Byte Slices
+Four standard packages are particularly important for manipulating strings: *bytes, strings, strconv,
+and unicode*.
 
 #### 4 Composite Types
 ##### 4.1. Arrays
@@ -158,7 +162,7 @@ shrink, are much more versatile. In an array literal, if an ellipsis "..." appea
 length is determined by the number of initializers. ```q := [...]int{1, 2, 3}``` has 3 integers. The size of an array
 is part of its type, so ```[3]int``` and ```[4]int``` are different types. In this form, indices can appear in any order
 and some may be omitted and unspecified values take on the zero value for the element type. For instance, 
-```r := [...]int{99: 01}``` defines an array of 100 elements, all zero except for the last, which has the value -1.
+```r := [...]int{99: -1}``` defines an array of 100 elements, all zero except for the last, which has the value -1.
 
 When a function is called, a copy of each argument value is assigned to the corresponding parameter variable, so
 the *function receives a copy, not the original*. Go treats arrays like any other type, but this behavior is
@@ -186,7 +190,7 @@ Usually we do not know whether a given call to built-in *append* will cause the 
  
 ##### 4.3. Maps
 It is an unordered collection of key/value pairs in which all the keys are distinct, and the value
-associated with a given key can be retreivedm updatedm or removed using a constant number of key
+associated with a given key can be retreived, updated or removed using a constant number of key
 comparisons on the average, no matter how large the hash table.
 In Go, a *map* is a reference to a hash table, and a map can type is written map[K]V, where *K* and *V*
 are the types of its keys and values. The key type K must be comparable using ==, so that the map can
@@ -202,7 +206,7 @@ The order of map iteration is unspecified, and lead to different ordering. Also 
 variable, and we cannot take its address.
 
 We mist allocate the map before we can store into it using *make*. Most of the map operations, including
-lookup, *delete*, *len*, and *range* loops, are safe to perform on a nil map reference, since they 
+*lookup*, *delete*, *len*, and *range* loops, are safe to perform on a nil map reference, since they 
 behave like an empty map.
 
 Sometimes we need a map or a set whose keys are slices, but because a map's keys mist be comparable, this 
@@ -226,7 +230,7 @@ in a directed graph.
 
 ``` var graph = make(map[string]map[string]bool)``` which is equal to
 
-```go var graph = make(map[from]map[to]bool)```
+``` var graph = make(map[from]map[to]bool)```
 
 ##### 4.4. Structs
 A *struct* is an aggregate data type that groups together zero or more named values of arbitrary types as
@@ -245,9 +249,9 @@ and this is required if the function must modify its argument, since in a call-b
 Go, the called function receives only a copy of an argument, not a reference to the original argument.
 
 ###### 4.4.3. Struct Embedding and Anonymous Fields
-Go lets us declare a field with a type but ni name; such fields are called *anonymous fields*. The type
+Go lets us declare a field with a type but no name; such fields are called *anonymous fields*. The type
 of the field must be a named type or a pointer to a named type. Below, Circle and Wheel have one
-anonymous field each with Wheel.
+anonymous field each.
 ```go
 type Point struct {
     X, Y int
@@ -261,7 +265,7 @@ type Wheel struct {
     Spokes int
 }
 ```
-Thanks to this emn=bedding, we can refer to the names of the leaves of the implicit tree without
+Thanks to this embedding, we can refer to the names of the leaves of the implicit tree without
 giving the intervening names:
 ```go
 var w Wheel
@@ -273,7 +277,7 @@ w.Spokes = 20
 Because "anonymous" fields do have implicit names, you can't have two anonymous fields of the same
 type since their names would conflict.
 
-**Why would tou want to embed a type that has not fields?**
+**Why would you want to embed a type that has not sub-fields?**
 The answer has to do with methods. The shorthand notation used for selecting the fields of an embedded
 type works for selecting its methods as well. In effect, the outer struct type gains not just the 
 fields of the embedded type but its methods also. This mechanism is the main way that complex object
@@ -319,7 +323,7 @@ is done by *json.unmarshal*. If the Go data structure only has some of the field
 then the other fields from the JSON are ignored.
 
 ##### 4.6. Text and HTML Templates
-a *template* is a string or file containing one or more of portions enclosed in double braces,
+A *template* is a string or file containing one or more portions enclosed in double braces,
 {{...}}, called *actions*. Within an action, the **|** notation makes the result of one operation the
 argument of another, analogous to a Unix shell pipeline.
 
@@ -331,6 +335,19 @@ User:   {{.User.login}}
 Title:  {{.Title | printf "%.64s"}}
 Age:    {{.CreatedAt | daysAgo}} days
 {{end}}`
+ 
+     var report = template.Must(template.New("issuelist").
+         Funcs(template.FuncMap{"daysAgo": daysAgo}).
+         Parse(templ))
+     func main() {
+         result, err := github.SearchIssues(os.Args[1:])
+         if err != nil {
+             log.Fatal(err)
+         }
+         if err := report.Execute(os.Stdout, result); err != nil {
+             log.Fatal(err)
+         }
+     }
 ```
 
 #### 5 Functions
@@ -338,6 +355,7 @@ Age:    {{.CreatedAt | daysAgo}} days
 ```go
 func name(paramater-list) (result-list) {
   body
+}
 ```
 The type of a function is sometimes called its *signature*. Two functions have the same type
 or signature if they have the same sequence of parameter types and the same sequence of 
@@ -394,13 +412,12 @@ as we will see in Section 5.9, it is used only for reporting truly unexpected er
 indicate a bug, not the routine errors that a robust program should be built to expect.
 
 Go programs use ordinary control-flow mechanisms like if and return to respond to errors.
-This style undeniably demands that more attention be paid to error-han- dling logic, but 
+This style undeniably demands that more attention be paid to error-handling logic, but 
 that is precisely the point.
 ###### 5.4.1. Error-Handling Strategies
 There are 5 different ways to handle errors.
 
-**First**
-First, and most common, is to propagate the error, so that a failure in a subroutine 
+**First** and most common, is to propagate the error, so that a failure in a subroutine 
 becomes a failure of the calling routine.
 ```go
 resp, err := http.Get(url)
@@ -435,7 +452,7 @@ In some cases, it’s sufficient just to log the error and then continue, perhap
 *reduced* functionality.
 
 **Fifth**
-Finally, in rare cases we can safely ignore an error entirely like cleaning the tmp area.
+ and finally, in rare cases we can safely ignore an error entirely like cleaning the tmp area.
 
 ##### 5.5. Function Values
 Functions are *first-class values* in Go: like other values, function values have types,
@@ -564,7 +581,7 @@ variadic function is distinct from the type of a function with an ordinary slice
 The *interface{}* type means that this function can accept any values at all for its final arguments.
 
 ##### 5.8. Deferred Function Calls
-a *defer* statement is an ordinary function or method call prefixed by the keyword defer. The 
+A *defer* statement is an ordinary function or method call prefixed by the keyword defer. The 
 function and argument expressions are evaluated when the statement is executed, but the *actual 
 call is deferred* until the function that contains the defer statement has finished, whether 
 normally, by executing a return statement or falling off the end, or abnormally, by panicking.
@@ -611,11 +628,11 @@ since no file will be closed until all files have been processed:
      for _, filename := range filenames {
          f, err := os.Open(filename)
          if err != nil {
-}
-return err
-}
-defer f.Close() // NOTE: risky; could run out of file descriptors
-// ...process f...
+            return err
+        }
+     }
+     defer f.Close() // NOTE: risky; could run out of file descriptors
+     // ...process f...
 ```
 
 One solution is to move the loop body, including the defer statement, into another function 
@@ -666,11 +683,12 @@ parse errors, perhaps with an extra message exhorting the user to file a bug rep
 ```go
 func Parse(input string) (s *Syntax, err error) {
     defer func() {
-}
-    if p := recover(); p != nil {
-        err = fmt.Errorf("internal error: %v", p)
-} }()
+        if p := recover(); p != nil {
+            err = fmt.Errorf("internal error: %v", p)
+        }
+    }()
 // ...parser...
+}
 ```
 The deferred function in Parse recovers from a panic, using the panic value to construct an
 error message; a fancier version might include the entire call stack using runtime.Stack.
@@ -788,6 +806,7 @@ A struct type may have more than one anonymous field. Had we declared **ColoredP
 ```go
      type ColoredPoint struct {
          Point
+         color.RGBA
     }
 ```
 then a value of this type would have all the methods of Point, all the methods of RGBA, and any
@@ -2064,6 +2083,34 @@ locate the bzlib.h header file and the libbz2.a archive library.
          } }
          return total, nil
      }
+```
+
+#### General Informations:
+##### Function Closures
+Go functions may be closures. *A closure is a function value that references variables from outside its
+body*. The function may access and assign to the referenced variables; in this sense the function is 
+"bound" to the variables.
+
+For example, the adder function returns a closure. Each closure is bound to its own sum variable.
+
+```go
+func adder() func(int) int {
+	sum := 0
+	return func(x int) int {
+		sum += x
+		return sum
+	}
+}
+ 
+func main() {
+	pos, neg := adder(), adder()
+	for i := 0; i < 10; i++ {
+		fmt.Println(
+			pos(i),
+			neg(-2*i),
+		)
+	}
+}
 ```
 
 #### Misc docs:
