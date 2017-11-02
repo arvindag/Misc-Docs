@@ -123,6 +123,8 @@ To checkout and particular branch for push using repo commands:
 
     git show HEAD@{2015-08-14}:<file_path> # to see the older version of the file
     git stash show -p stash@{2} # shows the stash changes for stash number 2
+    git stash apply stash@{2} # to apply the stash version 2
+    git stash save "save comments" # to save with appropriate comments instead of default
     git diff mybranch master -- myfile.cs OR
     git diff branch1:file branch2:file
     git reset --hard HEAD~100 # Moves the head of the current branch by 100 back
