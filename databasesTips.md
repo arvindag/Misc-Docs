@@ -111,3 +111,5 @@ Compound keys include multiple columns in the primary key, but these additional 
 Note that only the first column of the primary key above is considered the partition key; the rest of columns are clustering keys.
 Clustering keys are responsible for sorting data within a partition. Each primary key column after the partition key is considered a clustering key.
 
+Good primer on databases and specially cassandra: http://abiasforaction.net/an-introduction-to-apache-cassandra/
+and cassandra architecture: http://abiasforaction.net/cassandra-architecture/
