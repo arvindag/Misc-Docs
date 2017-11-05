@@ -81,11 +81,12 @@ You want every node in the cluster to have roughly the same amount of data. Cass
 a given. Rows are spread around the cluster based on a hash of the partition key, which is the first element of
 the PRIMARY KEY. So, the key to spreading data evenly is this: pick a good primary key. I'll explain how to do this in a bit.
 
-###### Rule 2: Minimize the Number of Partitions Read
+###### Rule 2: Minimize the Number of Partitions Read when querying
 Partitions are groups of rows that share the same partition key. When you issue a read query, you want to read rows
 from as few partitions as possible.
 
-Why is this important? Each partition may reside on a different node. The coordinator will
+Why is this important? Each partition may reside on a different node. Different partitions live on different nodes.
+The coordinator will
 generally need to issue separate commands to separate nodes for each partition you request.
 This adds a lot of overhead and increases the variation in latency. Furthermore, even on a
 single node, it's more expensive to read from multiple partitions than from a single one due
