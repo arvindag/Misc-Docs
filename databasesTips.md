@@ -7,7 +7,7 @@ https://en.wikipedia.org/wiki/Database_index is on wiki
 
 So, what is an index? Well, an index is a data structure (most commonly a B- tree) that stores the values for a specific column in a table. An index is created on a column of a table. So, the key points to remember are that an index consists of column values from one table, and that those values are stored in a data structure. The index is a data structure – remember that.
 
-##### Clustered index Vs non-CLustered Index
+##### Clustered index Vs non-Clustered Index
 http://stackoverflow.com/questions/1251636/what-do-clustered-and-non-clustered-index-actually-mean is okay
 
 ##### Elastic Search 101
@@ -110,6 +110,24 @@ SELECT DISTINCT key FROM metrics WHERE token(key) >= ? AND token(key) < ?
 Compound keys include multiple columns in the primary key, but these additional columns do not necessarily affect the partition key. A partition key with multiple columns is known as a composite key and will be discussed later.
 Note that only the first column of the primary key above is considered the partition key; the rest of columns are clustering keys.
 Clustering keys are responsible for sorting data within a partition. Each primary key column after the partition key is considered a clustering key. Please note that if the primary key (key, timestamp) is same for 2 different value, then the second data will overwrite the previous one. This can be useful to perform dedup inside cassandra.
+
+```
+CreateTableCmd:
+    CreateEvents = `CREATE TABLE IF NOT EXISTS {{.Keyspace}}.{{.Events}} (
+			  tsp   timestamp,     // timestamp for partition key
+			  uid   timeuuid,      // time based uuid
+			  src   text,          // source message
+			  attr  blob,          // attributes
+			  data  blob,          // data
+		PRIMARY KEY (tsp, uid))
+			WITH CLUSTERING ORDER BY (uid desc);
+
+StoreCmd: "INSERT INTO " + keySpace + "." + tableName + " (tsp, uid, src, attr, data) VALUES (?, ?, ?, ?, ?)"
+GetCmd: "SELECT uid, src, attr, data FROM " + tableName + " WHERE tsp = ?"
+DeleteCmd: = "DELETE FROM " + keySpace + "." + tableName + " WHERE tsp = ? and uid = ?"
+DeletePartionCmd: = "DELETE FROM " + keySpace + "." + tableName + " WHERE tsp = ?"
+```
+In the above case, tsp will be the partition key and uid is the clustering key.
 
 Good primer on databases and specially cassandra: http://abiasforaction.net/an-introduction-to-apache-cassandra/
 and cassandra architecture: http://abiasforaction.net/cassandra-architecture/
