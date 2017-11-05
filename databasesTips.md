@@ -132,7 +132,8 @@ CleanTableData: truncate keyspace.tableName;
 In the above case, tsp will be the partition key and uid is the clustering key.
 
 Good primer on databases and specially cassandra: http://abiasforaction.net/an-introduction-to-apache-cassandra/
-and cassandra architecture: http://abiasforaction.net/cassandra-architecture/
+and cassandra architecture: http://abiasforaction.net/cassandra-architecture/ Another good one to understand the cassandra table
+internals is http://abiasforaction.net/cassandra-query-language-cql-tutorial/
 
 * **Cassandra Keyspace – Keyspace** is similar to a schema in the RDBMS world. A keyspace is a container for all your application data. When defining a keyspace, you need to specify a replication strategy and a replication factor i.e. the number of nodes that the data must be replicate too.
 * **Column Family** – A column family is analogous to the concept of a table in an RDBMS. But that is where the similarity ends. Instead of thinking of a column family as RDBMS table think of a column family as a map of sorted map. A row in the map provides access to a set of columns which is represented by a sorted map.
