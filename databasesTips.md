@@ -113,7 +113,7 @@ Clustering keys are responsible for sorting data within a partition. Each primar
 
 ```
 CreateTableCmd:
-    CreateEvents = `CREATE TABLE IF NOT EXISTS {{.Keyspace}}.{{.Events}} (
+    CreateTable = `CREATE TABLE IF NOT EXISTS {{.Keyspace}}.{{.TableName}} (
 			  tsp   timestamp,     // timestamp for partition key
 			  uid   timeuuid,      // time based uuid
 			  src   text,          // source message
