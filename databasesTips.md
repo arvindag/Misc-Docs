@@ -109,7 +109,7 @@ SELECT DISTINCT key FROM metrics WHERE token(key) >= ? AND token(key) < ?
 ```
 Compound keys include multiple columns in the primary key, but these additional columns do not necessarily affect the partition key. A partition key with multiple columns is known as a composite key and will be discussed later.
 Note that only the first column of the primary key above is considered the partition key; the rest of columns are clustering keys.
-Clustering keys are responsible for sorting data within a partition. Each primary key column after the partition key is considered a clustering key.
+Clustering keys are responsible for sorting data within a partition. Each primary key column after the partition key is considered a clustering key. Please note that if the primary key (key, timestamp) is same for 2 different value, then the second data will overwrite the previous one. This can be useful to perform dedup inside cassandra.
 
 Good primer on databases and specially cassandra: http://abiasforaction.net/an-introduction-to-apache-cassandra/
 and cassandra architecture: http://abiasforaction.net/cassandra-architecture/
