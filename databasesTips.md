@@ -126,6 +126,8 @@ StoreCmd: "INSERT INTO " + keySpace + "." + tableName + " (tsp, uid, src, attr, 
 GetCmd: "SELECT uid, src, attr, data FROM " + tableName + " WHERE tsp = ?"
 DeleteCmd: = "DELETE FROM " + keySpace + "." + tableName + " WHERE tsp = ? and uid = ?"
 DeletePartionCmd: = "DELETE FROM " + keySpace + "." + tableName + " WHERE tsp = ?"
+GetCount: select COUNT(*) from keyspace.tableName;
+CleanTableData: truncate keyspace.tableName;
 ```
 In the above case, tsp will be the partition key and uid is the clustering key.
 
