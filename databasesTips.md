@@ -142,3 +142,8 @@ Map<RowKey, SortedMap<ColumnKey, ColumnValue>>
 Please note in CQL (Cassandra Query Language) lingo a Column Family is referred to as a table.
 
 * **Row Key** – A row key is also known as the partition key and has a number of columns associated with it i.e. a sorted map as shown above. The row key is responsible for determining data distribution across a cluster.
+
+When to use Cassandra Vs HBase: https://www.infoworld.com/article/2607927/application-development/get-to-know-cassandra--the-nosql-maverick.html
+
+#### SQL Vs NoSQL
+One good page explaining some of the limitations of NoSQL is https://www.infoworld.com/article/2617405/nosql/7-hard-truths-about-the-nosql-revolution.html?page=2. 
