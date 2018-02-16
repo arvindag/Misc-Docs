@@ -2120,3 +2120,22 @@ https://dzone.com/articles/so-you-wanna-go-fast is a good site.
 1. Arrays are values, assigning one array to another copies all the elements
 2. If you pass an array to a function, it will receive a copy of the array, not a pointer to it
 3. The size of an array is part of its type. The types [10] int and [20] int are distinct
+
+#### Program Initialization and Execution
+Each element of such a variable or value is set to the zero value for its type: false for booleans,
+0 for numeric types, "" for strings, and nil for pointers, functions, interfaces, slices, channels,
+and maps.
+
+A package with no imports is initialized by assigning initial values to all its package-level variables
+followed by calling all init functions in the order they appear in the source, possibly in multiple files,
+as presented to the compiler. If a package has imports, the imported packages are initialized before
+initializing the package itself. If multiple packages import a package, the imported package will be
+initialized only once. The importing of packages, by construction, guarantees that there can be no
+cyclic initialization dependencies.
+
+Package initialization—variable initialization and the invocation of init functions—happens in a
+single goroutine, sequentially, one package at a time. An init function may launch other goroutines,
+which can run concurrently with the initialization code. However, initialization always sequences
+the init functions: it will not invoke the next one until the previous one has returned.
+
+Please refer to https://golang.org/ref/spec#Program_initialization_and_execution for more details.
