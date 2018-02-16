@@ -2133,7 +2133,7 @@ initializing the package itself. If multiple packages import a package, the impo
 initialized only once. The importing of packages, by construction, guarantees that there can be no
 cyclic initialization dependencies.
 
-Package initialization—variable initialization and the invocation of init functions—happens in a
+Package initialization **variable initialization and the invocation of init functions** happens in a
 single goroutine, sequentially, one package at a time. An init function may launch other goroutines,
 which can run concurrently with the initialization code. However, initialization always sequences
 the init functions: it will not invoke the next one until the previous one has returned.
