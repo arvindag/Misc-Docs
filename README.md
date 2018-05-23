@@ -65,47 +65,10 @@ Add "
 Please make sure that the 'ssh-add -l' command lists the id_dsa.personalpn file else
 run 'ssh-all ~/.ssh/id_dsa.personalpn' to include it
 
-#### Git setup
-
-    sudo apt-get install git gitk git-gui
-    git config --global user.name "Arvind Agrawal"
-    git config --global user.email "arvindag@gmail.com"
-    git config --global core.editor vi
-    curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -o ~/.git-prompt.sh
-
-vi ~/.gitconfig # to see the git config entries
-vi ~/.bashrc and add
-
-    # to set up the git prompt on top of standard prompt
-    source ~/.git-prompt.sh
-    GIT_PS1_SHOWDIRTYSTATE=true
-    PS1=$PS1'$(__git_ps1 "\[\e[0;32m\](%s) \[\e[0m\]")'
-
-Clone github files to local area
-
-    mkdir ~/PeerNova
-    cd PeerNova
-    git clone git@github.com:peernova/Peer-Audit.git
-    git clone git@github.com:peernova/Eldorado.git
-    git clone git@github.com:peernova-private/cuneiform.git
-
 cd ~/personal
 
     git clone git@github.com:arvindag/Misc-Docs.git
 
-To checkout and particular branch for push:
-
-    git branch dev-arvind
-    git checkout dev-arvind
-    git pull origin master
-    <if needed git stash apply and then make more changes>
-    git commit . -m "<message>"
-    git push origin dev-arvind
-    <Go to the Gitbub and pull/merge the commits>
-    git checkout master
-    git branch -D dev-arvind
-    git pull origin master
-    
 To checkout and particular branch for push using repo commands:
 
     repo forall -c git branch dev-arvind
@@ -119,18 +82,7 @@ To checkout and particular branch for push using repo commands:
     repo forall -c git branch -D dev-arvind
     repo sync
     
-#### Good Git commands:
 
-    git show HEAD@{2015-08-14}:<file_path> # to see the older version of the file
-    git stash show -p stash@{2} # shows the stash changes for stash number 2
-    git stash apply stash@{2} # to apply the stash version 2
-    git stash save "save comments" # to save with appropriate comments instead of default
-    git diff mybranch master -- myfile.cs OR
-    git diff branch1:file branch2:file
-    git reset --hard HEAD~100 # Moves the head of the current branch by 100 back
-    git rebase -i HEAD~5 # will take the last 5 changes in the current branch and gives the choice to squash/merge them
-    git pull --rebase origin master # to rebase with master, when in a branch. Resolve the conflict and push to branch after that.
-    
     
 #### Emacs Setting
 ~/.emacs file settings
