@@ -1,6 +1,6 @@
 ## Git Commands
 
-### Some git setip commands
+### Some git setup commands
 
 ```
 git config --global user.name "your name"
