@@ -7,12 +7,12 @@ git config --global user.name "your name"
 git config --global user.email "your email address"
 git config --global core.editor vi
 ```
-vi ~/.gitconfig # to see the above git config entries.
+`vi ~/.gitconfig` to see the above git config entries.
 
 ```
 curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -o ~/.git-prompt.sh
 ```
-vi ~/.bashrc and add
+`vi ~/.bashrc` and add
 ```
 # to set up the git prompt on top of standard prompt
 source ~/.git-prompt.sh
