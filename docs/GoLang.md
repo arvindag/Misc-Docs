@@ -2141,5 +2141,11 @@ the init functions: it will not invoke the next one until the previous one has r
 Please refer to https://golang.org/ref/spec#Program_initialization_and_execution for more details.
 
 #### Nil details
-https://go101.org/article/nil.html has a good explanation about *nil*
+https://go101.org/article/nil.html has a good explanation about *nil*.
+
+In Go, nil is the zero value for pointers, interfaces, maps, slices, channels and function types, representing an uninitialized value.
+nil doesn't mean some "undefined" state, it's a proper value in itself. An object in Go is nil simply if and only if it's value is nil, which it can only be if it's of one of the aforementioned types. For some of the pre-defined data types like string, int etc, we cannot assign the values to be nil as they have also defined uninitialized values like "", 0, etc.
+
+Also nil is an identifier and not a keyword in Golang.
+
 
