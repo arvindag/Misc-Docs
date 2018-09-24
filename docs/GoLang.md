@@ -2139,3 +2139,7 @@ which can run concurrently with the initialization code. However, initialization
 the init functions: it will not invoke the next one until the previous one has returned.
 
 Please refer to https://golang.org/ref/spec#Program_initialization_and_execution for more details.
+
+#### Nil details
+https://go101.org/article/nil.html has a good explanation about *nil*
+
