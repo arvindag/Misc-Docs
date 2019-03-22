@@ -50,5 +50,3 @@ https://github.com/alanctgardner/gogen-avro for avro client.
 
 #### Primer on Golang concurrency
 https://medium.com/rungo/achieving-concurrency-in-go-3f84cbf870ca
-
-
