@@ -2148,4 +2148,7 @@ nil doesn't mean some "undefined" state, it's a proper value in itself. An objec
 
 Also nil is an identifier and not a keyword in Golang.
 
-
+### Sort
+1. `sort.Ints(nums)` to sort an array of integers to same variable
+2. `sort.Strings(s)` to sort an array of strings to same variable
+3. `sort.Float64s(f)` to sort an array of float64 to same variable
