@@ -2152,3 +2152,8 @@ Also nil is an identifier and not a keyword in Golang.
 1. `sort.Ints(nums)` to sort an array of integers to same variable
 2. `sort.Strings(s)` to sort an array of strings to same variable
 3. `sort.Float64s(f)` to sort an array of float64 to same variable
+
+### strings
+1. `strings.ContainsRune(string, rune)` finds rune in the string
+2. `strings.ReplaceAll(string, old, new)` replaces all instances of old with new in the string
+3. `strings.Count(s, substr)` returns the count of substr in s
