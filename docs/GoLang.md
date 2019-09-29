@@ -2157,3 +2157,6 @@ Also nil is an identifier and not a keyword in Golang.
 1. `strings.ContainsRune(string, rune)` finds rune in the string
 2. `strings.ReplaceAll(string, old, new)` replaces all instances of old with new in the string
 3. `strings.Count(s, substr)` returns the count of substr in s
+
+### Go tools
+The transformation to an Abstract Syntax Tree can be displayed thanks to the command go tool compile with the flag -W. `go tool compile -W`
